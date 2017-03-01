@@ -11,8 +11,9 @@
      if (xhr.readyState != 4) return;
      questions = JSON.parse(xhr.responseText);
 
-     tmplTip = _.template(createTip());
+
      tmplVoluntary = _.template(createVoluntary());
+
      tmplCommonContainer = _.template(createCommonContainer());
 
      document.getElementById('template').innerHTML = tmplCommonContainer({
@@ -27,32 +28,32 @@
    return `<% for(let i=0 ; i < list.length; i++) { %>
              <div class='container'>
                <p><%-list[i].header%></p>
-               <div> <%-list[i].question%>
                
                 <%if(list[i].tip) { %>
-                  <div><%=tmplTip()%></div>
+                  <div> <%-list[i].question%><span class='toggleTip'>?</span></div>
+                  <div class='tip' ><%-list[i].tip%></div>
+                <% } else { %>
+                  <div><%-list[i].question%></div>
                 <%}%>
-               </div>
-               
-               <%if(list[i].type == 'voluntary') {%>
-
+              
+               <%if(list[i].type == 'voluntary') { %>
                  <div><%=tmplVoluntary()%></div>
-                 
-
-                 
                <%}%>
+               
+
              </div>
            <%}%>`
  }
 
-
  function createVoluntary() {
    return '<input type="textarea">'
  }
-
- function createTip() {
-   return "<div class='tip'>1</div>" // если написать строчку без <%%> то все будет работать
+ 
+ function createSingle() {
+   return '<input type="radio">'
  }
+ 
+
  
  
  
