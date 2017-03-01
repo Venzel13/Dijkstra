@@ -51,7 +51,7 @@
  }
 
  function createTip() {
-   return "<div class='tip'><%=list[i].tip%></div>" // если написать строчку без <%%> то все будет работать
+   return "<div class='tip'>1</div>" // если написать строчку без <%%> то все будет работать
  }
  
  
