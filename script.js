@@ -82,7 +82,7 @@
 
    let resultArray = answersArray.map(function(answer) {
      if(!answer.none) {
-       return "<label><input type='radio' >" + answer.text + "</label><br>";
+       return "<label><input type='radio' onmousedown = 'this.isChecked = this.checked' onclick ='this.checked = !this.isChecked'>">" + answer.text + "</label><br>"; //повторный клик по radio деактивирует его
      } else {
        return "<label><input type='radio' onclick='alert(`fdf`)'>" + answer.text + "</label><br>";
      }
