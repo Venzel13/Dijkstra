@@ -12,8 +12,6 @@
      questions = JSON.parse(xhr.responseText);
 
 
-     tmplVoluntary = _.template(createVoluntary());
-
      tmplCommonContainer = _.template(createCommonContainer());
 
      document.getElementById('template').innerHTML = tmplCommonContainer({
@@ -37,7 +35,15 @@
                 <%}%>
               
                <%if(list[i].type == 'voluntary') { %>
-                 <div><%=tmplVoluntary()%></div>
+                 <div><%=createVoluntary()%></div>
+               <%}%>
+               
+               <%if(list[i].type == 'multiple') { %>
+                 <div><%=createMultiple(list[i].body)%></div>
+               <%}%>
+               
+               <%if(list[i].type == 'single') { %>
+                 <div><%=createSingle(list[i].body)%></div>
                <%}%>
                
 
@@ -49,8 +55,37 @@
    return '<input type="textarea">'
  }
  
- function createSingle() {
-   return '<input type="radio">'
+ function createMultiple(answersArray) {
+
+
+   let resultArray = answersArray.map(function(answer) {
+
+     return "<label><input type='checkbox'>" + answer.text + "</label><br>";
+   });
+   
+
+  return resultArray.join("")
+ }
+ 
+ 
+ function createSingle(answersArray) {
+
+
+
+   let resultArray = answersArray.map(function(answer) {
+
+     return "<label><input type='radio'>" + answer.text + "</label><br>";
+   });
+
+  return resultArray.join("")
+ }
+ 
+
+ 
+ function disableAnswers(disabledElements) {
+   disabledElements.forEach(function(item) {
+     item.disabled = !item.disabled;
+   })
  }
  
 
