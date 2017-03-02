@@ -57,37 +57,50 @@
  
  function createMultiple(answersArray) {
 
+   //let notNoneAnswers = [];
+   //let noneAnswers = [];
 
    let resultArray = answersArray.map(function(answer) {
-
-     return "<label><input type='checkbox'>" + answer.text + "</label><br>";
+     if(!answer.none) {
+       return "<label><input type='checkbox'>" + answer.text + "</label><br>";
+     } else {
+       return "<label><input type='checkbox' onclick='disableAnswers()'>" + answer.text + "</label><br>";
+     }
+     
    });
    
-
+  //noneAnswers.forEach(function(answer) {
+  //  answer.onclick = disableAnswers(notNoneAnswers)
+  //});
   return resultArray.join("")
  }
- 
  
  function createSingle(answersArray) {
 
-
+   //let notNoneAnswers = [];
+   //let noneAnswers = [];
 
    let resultArray = answersArray.map(function(answer) {
-
-     return "<label><input type='radio'>" + answer.text + "</label><br>";
+     if(!answer.none) {
+       return "<label><input type='radio' >" + answer.text + "</label><br>";
+     } else {
+       return "<label><input type='radio' onclick='alert(`fdf`)'>" + answer.text + "</label><br>";
+     }
+     
    });
-
+   
+  //noneAnswers.forEach(function(answer) {
+  //  answer.onclick = disableAnswers(notNoneAnswers)
+  //});
   return resultArray.join("")
  }
- 
-
  
  function disableAnswers(disabledElements) {
    disabledElements.forEach(function(item) {
      item.disabled = !item.disabled;
    })
  }
- 
+  
 
  
  
