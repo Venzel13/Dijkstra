@@ -53,13 +53,13 @@
  function createMultiple(answersArray, i) {
    let resultArray = answersArray.map(function(answer) {
      if(answer.other) {
-       return "<label><input type='checkbox' onclick='toggleClarification(" + i + ")' class='notNone" + i + "'>" + answer.text + "<input class='clarification" + i +"' hidden></label><br>"
+       return "<label><input type='checkbox' onclick='toggleClarification(" + i + ", this)' class='notNone" + i + "'>" + answer.text + "<input class='clarification" + i +"' hidden></label><br>"
      }
      
      if(!answer.none) {
        return "<label><input type='checkbox' class='notNone" + i + "'>" + answer.text + "</label><br>";
      } else {
-       return "<label><input type='checkbox' onclick='disableAnswers(" + i + ")'>" + answer.text + "</label><br>";
+       return "<label><input type='checkbox' onclick='disableAnswers(" + i + ", this)'>" + answer.text + "</label><br>";
      }
    });
   return resultArray.join("")
@@ -68,7 +68,7 @@
  function createSingle(answersArray, i) {
    let resultArray = answersArray.map(function(answer) {
      if(answer.other) {
-       return "<label><input type='radio' name=" + i + " onclick='toggleClarification(" + i + ")' class='notNone" + i + "'>" + answer.text + "<input class='clarification" + i +"' hidden></label><br>"
+       return "<label><input type='radio' onmousedown='this.isChecked = this.checked' name=" + i + " onclick='toggleClarification(" + i + ", this)' class='notNone" + i + "'>" + answer.text + "<input class='clarification" + i +"' hidden></label><br>"
      }
      
      if(!answer.none) {
@@ -80,15 +80,20 @@
   return resultArray.join("")
  }
  
- function disableAnswers(n, radio) {
-   radio.checked = !radio.isChecked;
+ function disableAnswers(n, elem) {
+   if(elem.type != 'checkbox') {
+   elem.checked = !elem.isChecked;
+   }
    let notNone = document.getElementsByClassName('notNone' + n);
    for(let i = 0; i < notNone.length; i++) {
      notNone[i].disabled = !notNone[i].disabled
    }
  }
 
- function toggleClarification(n) {
+ function toggleClarification(n, elem) {
+   if(elem.type != 'checkbox') {
+   elem.checked = !elem.isChecked
+   }
    let clarification = document.querySelector('.clarification' + n);
    clarification.hidden = !clarification.hidden;
  }
