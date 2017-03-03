@@ -67,7 +67,7 @@
  function createSingle(answersArray, i) {
    let resultArray = answersArray.map(function(answer) {
      if(answer.other) {
-       return "<label><input type='radio' name=" + i + " onclick='toggleClarification(" + i + ")' onmousedown ='this.isChecked = this.checked' class='notNone" + i + "'>" + answer.text + "<input class='clarification" + i +"' hidden></label><br>"
+       return "<label><input type='radio' name=" + i + " onclick='toggleClarification(" + i + ")' class='notNone" + i + "'>" + answer.text + "<input class='clarification" + i +"' hidden></label><br>"
      }
      
      if(!answer.none) {
