@@ -88,6 +88,8 @@
    for(let i = 0; i < notNone.length; i++) {
      notNone[i].disabled = !notNone[i].disabled
    }
+   let clarification = document.querySelector('.clarification' + n);
+   clarification.disabled = !clarification.disabled;
  }
 
  function toggleClarification(n, elem) {
