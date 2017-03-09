@@ -29,22 +29,20 @@
                 <% } else { %>
                   <div><%-list[i].question%></div>
                 <%}%>
-              
-               <%if(list[i].type == 'voluntary') { %>
-                 <div><%=createVoluntary()%></div>
-               <%}%>
-               
-               <%if(list[i].type == 'multiple') { %>
-                 <div><%=createMultiple(list[i].body, i)%></div>
-               <%}%>
-               
-               <%if(list[i].type == 'single') { %>
-                 <div><%=createSingle(list[i].body, i)%></div>
-               <%}%>
-               
+                
+                <%switch(list[i].type) { case 'single': %>
+                <div><%=createSingle(list[i].body, i)%></div>
+                <% break; case 'multiple': %>
+                <div><%=createMultiple(list[i].body, i)%></div>
+                <% break; default: %>
+                <div><%=createVoluntary()%></div>
+              <%}%>
+                
              </div>
            <%}%>`
  }
+ 
+
 
  function createVoluntary() {
    return '<input type="textarea">'
