@@ -10,7 +10,6 @@
      var questions = JSON.parse(xhr.responseText);
      
      tmplCommonContainer = _.template(createCommonContainer());
-
      document.getElementById('template').innerHTML = tmplCommonContainer({
        list: questions
      });
@@ -31,13 +30,13 @@
                 <%}%>
                 
                 <%switch(list[i].type) { case 'single': %>
-                <div><%=createSingle(list[i].body, i)%></div>
+                <div><%=createSingle(list[i].body)%></div>
                 <% break; case 'multiple': %>
-                <div><%=createMultiple(list[i].body, i)%></div>
+                <div><%=createMultiple(list[i].body)%></div>
                 <% break; default: %>
                 <div><%=createVoluntary()%></div>
               <%}%>
-                
+
              </div>
            <%}%>`
  }
@@ -48,16 +47,16 @@
    return '<input type="textarea">'
  }
  
- function createMultiple(answersArray, i) {
+ function createMultiple(answersArray) {
    let resultArray = answersArray.map(function(answer) {
      if(answer.other) {
-       return "<label><input type='checkbox' onclick='toggleClarification(" + i + ", this)' class='notNone" + i + "'>" + answer.text + "<input class='clarification" + i +"' hidden></label><br>"
+       return "<label><input type='checkbox' onclick='a(this)' class='notNone'>" + answer.text + "<input class='clarification' hidden></label><br>"
      }
      
      if(!answer.none) {
-       return "<label><input type='checkbox' class='notNone" + i + "'>" + answer.text + "</label><br>";
+       return "<label><input type='checkbox' class='notNone'>" + answer.text + "</label><br>";
      } else {
-       return "<label><input type='checkbox' onclick='disableAnswers(" + i + ", this)'>" + answer.text + "</label><br>";
+       return "<label><input type='checkbox' onclick='disableAnswers(this)'>" + answer.text + "</label><br>";
      }
    });
   return resultArray.join("")
@@ -66,38 +65,45 @@
  function createSingle(answersArray, i) {
    let resultArray = answersArray.map(function(answer) {
      if(answer.other) {
-       return "<label><input type='radio' onmousedown='this.isChecked = this.checked' name=" + i + " onclick='toggleClarification(" + i + ", this)' class='notNone" + i + "'>" + answer.text + "<input class='clarification" + i +"' hidden></label><br>"
+       return "<label><input type='radio' onmousedown='this.isChecked = this.checked' name=" + i + " onclick='a(this)' class='notNone'>" + answer.text + "<input class='clarification' hidden></label><br>"
      }
      
      if(!answer.none) {
-       return "<label><input type='radio' onmousedown='this.isChecked = this.checked' onclick='this.checked = !this.isChecked' name=" + i + " class='notNone" + i + "'>" + answer.text + "</label><br>";
+       return "<label><input type='radio' onmousedown='this.isChecked = this.checked' onclick='this.checked = !this.isChecked' name=" + i + " class='notNone'>" + answer.text + "</label><br>";
      } else {
-       return "<label><input type='radio' onmousedown='this.isChecked = this.checked' name=" + i + " onclick='disableAnswers(" + i + ", this)'>" + answer.text + "</label><br>";
+       return "<label><input type='radio' onmousedown='this.isChecked = this.checked' name=" + i + " onclick='disableAnswers(this)'>" + answer.text + "</label><br>";
      }
    });
   return resultArray.join("")
  }
  
- function disableAnswers(n, elem) {
+ function disableAnswers(elem) {
    if(elem.type != 'checkbox') {
    elem.checked = !elem.isChecked;
    }
-   let notNone = document.getElementsByClassName('notNone' + n);
+   let notNone = document.getElementsByClassName('notNone');
    for(let i = 0; i < notNone.length; i++) {
      notNone[i].disabled = !notNone[i].disabled
    }
-   let clarification = document.querySelector('.clarification' + n);
+   let clarification = document.querySelector('.clarification');
    clarification.disabled = !clarification.disabled;
  }
 
- function toggleClarification(n, elem) {
+ function toggleClarification(elem) {
    if(elem.type != 'checkbox') {
    elem.checked = !elem.isChecked
    }
-   let clarification = document.querySelector('.clarification' + n);
-   clarification.hidden = !clarification.hidden;
+   
+   
+   let clarification = document.querySelector('.clarification');
+   this.hidden = !this.hidden;
  }
  
+  var a = toggleClarification.bind(clarification)
+ 
+ 
+ 
+
  document.onclick = function(event) {
      if (event.target.className == 'toggleTip') {
        openTip(event);
