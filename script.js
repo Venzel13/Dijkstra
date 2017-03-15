@@ -15,16 +15,19 @@
 
 
   function createQuestionContainer(options) { // options объект аргументов
-  
+    var tipArr = [];
+    
     for (var i = 0; i < options.length; i++) {
       var container = createContainer("div", document.body, null, "container");
       createContainer("p", container, options[i].header);
       var question = createContainer("div", container, options[i].question);
+      
 
       if (options[i].tip) { // для вопросов с подсказкой
         var questionMark = createContainer("span", question, "?", "toggleTip");
         let tip = createContainer("div", container, options[i].tip, "tip"); // let решает проблему с замыканием (свой tip при каждой итерации), т.к в var tip попадает только последняя итерация i
         tip.hidden = true;
+        tipArr.push(tip)
 
         // обработчик при клике на вопрос
         questionMark.onclick = function(event) {
@@ -48,16 +51,14 @@
 
     // отслеживаем клик на документе
     document.body.onclick = function() {
-      var tips = document.getElementsByClassName("tip");
-      for (var i = 0; i < tips.length; i++) {
-        tips[i].hidden = true;
+      for (var i = 0; i < tipArr.length; i++) {
+        tipArr[i].hidden = true;
       }
     };
   }
   
   function createAnswer(parent, answers, type, name) {
     var notNone = [];
-    var clarification = createContainer("input", document.body);
     answers.forEach(answer => {
       var label = createContainer("label", parent);
       var elem = createContainer("input", label);
@@ -67,9 +68,7 @@
 
       if(!answer.none) {
         notNone.push(elem);
-      }
-      
-      if(answer.none) {
+      } else {
         elem.onclick = function() {
           notNone.forEach(function(notNoneElem) {
             notNoneElem.disabled = !notNoneElem.disabled;
@@ -78,10 +77,10 @@
       }
       
       if(answer.other) {
+        var clarification = createContainer("input", label);
+        clarification.hidden = true;
         elem.onclick = function() {
           clarification.hidden = !clarification.hidden;
-          
-          
         }
       }
       
@@ -100,4 +99,3 @@
     return container;
   }
   
-  // elem.checked = !elem.isChecked;
