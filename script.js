@@ -59,12 +59,21 @@
   
   function createAnswer(parent, answers, type, name) {
     var notNone = [];
+    var clarification
     answers.forEach(answer => {
       var label = createContainer("label", parent);
       var elem = createContainer("input", label);
       elem.type = type;
       elem.name = name;
       createContainer("span", label, answer.text);
+      
+      if(answer.other) {
+        clarification = createContainer("input", label);
+        clarification.hidden = true;
+        elem.onclick = function() {
+          clarification.hidden = !clarification.hidden;
+        }
+      }
 
       if(!answer.none) {
         notNone.push(elem);
@@ -73,16 +82,11 @@
           notNone.forEach(function(notNoneElem) {
             notNoneElem.disabled = !notNoneElem.disabled;
           });
+          clarification.disabled = !clarification.disabled;
         }
       }
       
-      if(answer.other) {
-        var clarification = createContainer("input", label);
-        clarification.hidden = true;
-        elem.onclick = function() {
-          clarification.hidden = !clarification.hidden;
-        }
-      }
+      
       
     });
   }
