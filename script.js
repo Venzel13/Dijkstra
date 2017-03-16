@@ -39,7 +39,6 @@
       switch (options[i].type) {
         case "single": // radio-button
           createAnswer(container, options[i].body, "radio", i);
-          
           break;
         case "multiple": // checkbox
           createAnswer(container, options[i].body, "checkbox");
@@ -72,16 +71,9 @@
       radioArr.push(elem);
       
       radioArr.forEach(radio => {
-      radio.addEventListener("mousedown", mousedown.bind(radio));
-      radio.addEventListener("click", click.bind(radio));
+        radio.addEventListener("mousedown", mousedown.bind(radio)); // не перезапишет обработчик onclick
+        radio.addEventListener("click", click.bind(radio));
       });
-      
-      function mousedown() {
-        this.isChecked = this.checked
-      }
-      function click() {
-        this.checked = !this.isChecked
-      }
       createContainer("span", label, answer.text);
       
       if(answer.other) {
@@ -116,6 +108,13 @@
     }
     parent.appendChild(container);
     return container;
+  }
+  
+  function mousedown() {
+    this.isChecked = this.checked;
+  }
+  function click() {
+    this.checked = !this.isChecked;
   }
   
   
