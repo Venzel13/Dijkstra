@@ -18,7 +18,7 @@
     var tipArr = [];
     
     for (var i = 0; i < options.length; i++) {
-      var container = createContainer("div", document.body, null, "container");
+      var container = createContainer("div", document.getElementById('questionnaire'), null, "container");
       createContainer("p", container, options[i].header);
       var question = createContainer("div", container, options[i].question);
       
@@ -39,6 +39,7 @@
       switch (options[i].type) {
         case "single": // radio-button
           createAnswer(container, options[i].body, "radio", i);
+          
           break;
         case "multiple": // checkbox
           createAnswer(container, options[i].body, "checkbox");
@@ -48,7 +49,7 @@
           break;
       }
     }
-
+    
     // отслеживаем клик на документе
     document.body.onclick = function() {
       for (var i = 0; i < tipArr.length; i++) {
@@ -56,15 +57,31 @@
       }
     };
   }
-  
+
   function createAnswer(parent, answers, type, name) {
     var notNone = [];
-    var clarification
+    var radioArr = [];
+    var clarification;
+    var elem
+    
     answers.forEach(answer => {
       var label = createContainer("label", parent);
-      var elem = createContainer("input", label);
+      elem = createContainer("input", label);
       elem.type = type;
       elem.name = name;
+      radioArr.push(elem);
+      
+      radioArr.forEach(radio => {
+      radio.addEventListener("mousedown", mousedown.bind(radio));
+      radio.addEventListener("click", click.bind(radio));
+      });
+      
+      function mousedown() {
+        this.isChecked = this.checked
+      }
+      function click() {
+        this.checked = !this.isChecked
+      }
       createContainer("span", label, answer.text);
       
       if(answer.other) {
@@ -85,10 +102,8 @@
           clarification.disabled = !clarification.disabled;
         }
       }
-      
-      
-      
     });
+    return elem
   }
 
   function createContainer(type, parent, html, className) {
@@ -102,4 +117,5 @@
     parent.appendChild(container);
     return container;
   }
+  
   
