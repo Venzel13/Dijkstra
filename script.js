@@ -18,7 +18,7 @@
     var tipArr = [];
     
     for (var i = 0; i < options.length; i++) {
-      var container = createContainer("div", document.getElementById('questionnaire'), null, "container");
+      var container = createContainer("div", questionnaire, null, "container");
       createContainer("p", container, options[i].header);
       var question = createContainer("div", container, options[i].question);
       
