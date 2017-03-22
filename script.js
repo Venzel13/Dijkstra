@@ -61,7 +61,6 @@
     document.body.onclick = function() {
       if (lastTip) {
         lastTip.hidden = true;
-        lastTip = undefined;
       }
     };
   }
