@@ -157,4 +157,16 @@
     clarification.disabled = !clarification.disabled;
   }
   
+  /*
+          questionMark.onclick = function(ev) {
+          ev.stopPropagation();
+          if (lastTip)
+            lastTip.hidden = true;
+          tip.hidden = false;
+          lastTip = function() { // обсудить с Марией
+            return tip
+          }
           
+        };
+      }
+  */
