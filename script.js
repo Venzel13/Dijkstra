@@ -66,11 +66,7 @@
   }
 
 // создает варианты ответов для каждого контейнера с вопросом
-  function createAnswers(answersProperty) {
-    var parent = answersProperty.parent;
-    var answers = answersProperty.answers;
-    var type = answersProperty.type;
-    var name = answersProperty.name
+  function createAnswers({parent, answers, type, name}) {
     
     var notNone = [];
     var uncheckedElements = [];
@@ -112,10 +108,7 @@
   }
 
 // создает контейнер с вопросом
-  function createElem(elementProperty) {
-    var type = elementProperty.type;
-    var html = elementProperty.html;
-    var className = elementProperty.className;
+  function createElem({type, html, className}) {
     
     var element = document.createElement(type);
     if (className) {
