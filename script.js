@@ -46,10 +46,13 @@
       // ответы для разных типов вопросов
       switch (questions[i].type) {
         case "single":
-          createAnswers({parent: container, answers: questions[i].body, type: "radio", name: i});
+          var single = createAnswers({answers: questions[i].body, type: "radio", name: i});
+          container.appendChild(single)
+          
           break;
         case "multiple":
-          createAnswers({parent: container, answers: questions[i].body, type: "checkbox"});
+          var multiple = createAnswers({answers: questions[i].body, type: "checkbox"});
+          container.appendChild(multiple)
           break;
         case "voluntary":
           var voluntary = createElem({type: "input"});
@@ -66,16 +69,17 @@
   }
 
 // создает варианты ответов для каждого контейнера с вопросом
-  function createAnswers({parent, answers, type, name}) {
-    
+  function createAnswers({answers, type, name}) {
     var notNone = [];
     var uncheckedElements = [];
     var clarification;
     var elem;
     
+    var blockOfAnswers = createElem({type: "div"});
+    
     for(var i = 0; i < answers.length; i++) {
       var label = createElem({type: "label"});
-      parent.appendChild(label);
+      blockOfAnswers.appendChild(label);
       elem = createElem({type: "input"});
       label.appendChild(elem)
       elem.type = type;
@@ -103,7 +107,7 @@
         }
       }
     }
-    return elem
+    return blockOfAnswers
     
   }
 
