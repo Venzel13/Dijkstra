@@ -1,113 +1,131 @@
   (function() {
+    
     var xhr = new XMLHttpRequest();
 
     xhr.open('GET', 'questions.json', true);
 
     xhr.send();
-
-    xhr.onreadystatechange = function() {
+    
+    function loadQuestions() {
       if (xhr.readyState != 4) return;
       var questions = JSON.parse(xhr.responseText);
+      
+      createQuestionnaire(questions);
+    }
 
-      createQuestionContainer(questions);
-    };
+    xhr.onreadystatechange = loadQuestions
+
   })();
 
 
-  function createQuestionContainer(options) { // options объект аргументов
-    var tipArr = [];
-    
-    for (var i = 0; i < options.length; i++) {
-      var container = createContainer("div", questionnaire, null, "container");
-      createContainer("p", container, options[i].header);
-      var question = createContainer("div", container, options[i].question);
+  function createQuestionnaire(questions) { // questions объект аргументов
+    var lastTip;
+    for (var i = 0; i < questions.length; i++) {
+      var container = createElem({type: "div", html: null, className: "container"});
+      document.getElementById('questionnaire').appendChild(container);
+      var header = createElem({type: "p", html: questions[i].header});
+      container.appendChild(header);
+      var question = createElem({type: "div", html: questions[i].question});
+      container.appendChild(question);
       
-
-      if (options[i].tip) { // для вопросов с подсказкой
-        var questionMark = createContainer("span", question, "?", "toggleTip");
-        let tip = createContainer("div", container, options[i].tip, "tip"); // let решает проблему с замыканием (свой tip при каждой итерации), т.к в var tip попадает только последняя итерация i
-        tip.hidden = true;
-        tipArr.push(tip)
-
+      if (questions[i].tip) {
+        let {tip, questionMark} = createTip(questions[i].tip);
+        container.appendChild(tip);
+        question.appendChild(questionMark);
+        
         // обработчик при клике на вопрос
-        questionMark.onclick = function(event) {
-          event.stopPropagation(); // событие не должно всплывать для скрытия по документу
+        questionMark.onclick = function(ev) {
+          ev.stopPropagation();
+          if (lastTip)
+            lastTip.hidden = true;
           tip.hidden = false;
+          lastTip = tip;
         };
       }
+      
       // ответы для разных типов вопросов
-      switch (options[i].type) {
-        case "single": // radio-button
-          createAnswer(container, options[i].body, "radio", i);
+      switch (questions[i].type) {
+        case "single":
+          createAnswers({parent: container, answers: questions[i].body, type: "radio", name: i});
           break;
-        case "multiple": // checkbox
-          createAnswer(container, options[i].body, "checkbox");
+        case "multiple":
+          createAnswers({parent: container, answers: questions[i].body, type: "checkbox"});
           break;
-        default: // textarea
-          createContainer("input", container);
+        case "voluntary":
+          var voluntary = createElem({type: "input"});
+          container.appendChild(voluntary);
           break;
       }
     }
-    
     // отслеживаем клик на документе
     document.body.onclick = function() {
-      for (var i = 0; i < tipArr.length; i++) {
-        tipArr[i].hidden = true;
+      if (lastTip) {
+        lastTip.hidden = true;
+        lastTip = undefined;
       }
     };
   }
 
-  function createAnswer(parent, answers, type, name) {
-    var notNone = [];
-    var radioArr = [];
-    var clarification;
-    var elem
+// создает варианты ответов для каждого контейнера с вопросом
+  function createAnswers(answersProperty) {
+    var parent = answersProperty.parent;
+    var answers = answersProperty.answers;
+    var type = answersProperty.type;
+    var name = answersProperty.name
     
-    answers.forEach(answer => {
-      var label = createContainer("label", parent);
-      elem = createContainer("input", label);
+    var notNone = [];
+    var uncheckedElements = [];
+    var clarification;
+    var elem;
+    
+    for(var i = 0; i < answers.length; i++) {
+      var label = createElem({type: "label"});
+      parent.appendChild(label);
+      elem = createElem({type: "input"});
+      label.appendChild(elem)
       elem.type = type;
       elem.name = name;
-      radioArr.push(elem);
       
-      radioArr.forEach(radio => {
-        radio.addEventListener("mousedown", mousedown.bind(radio)); // не перезапишет обработчик onclick
-        radio.addEventListener("click", click.bind(radio));
-      });
-      createContainer("span", label, answer.text);
+      uncheckElem(uncheckedElements, elem);
       
-      if(answer.other) {
-        clarification = createContainer("input", label);
+      var span = createElem({type: "span", html: answers[i].text});
+      label.appendChild(span);
+      
+      if(answers[i].other) {
+        clarification = createElem({type: "input"});
+        label.appendChild(clarification);
         clarification.hidden = true;
         elem.onclick = function() {
           clarification.hidden = !clarification.hidden;
         }
       }
 
-      if(!answer.none) {
+      if(!answers[i].none) {
         notNone.push(elem);
       } else {
         elem.onclick = function() {
-          notNone.forEach(function(notNoneElem) {
-            notNoneElem.disabled = !notNoneElem.disabled;
-          });
-          clarification.disabled = !clarification.disabled;
+          disableAnswers(notNone, clarification)
         }
       }
-    });
+    }
     return elem
+    
   }
 
-  function createContainer(type, parent, html, className) {
-    var container = document.createElement(type);
+// создает контейнер с вопросом
+  function createElem(elementProperty) {
+    var type = elementProperty.type;
+    var html = elementProperty.html;
+    var className = elementProperty.className;
+    
+    var element = document.createElement(type);
     if (className) {
-      container.classList.add(className);
+      element.classList.add(className);
     }
     if (html) {
-      container.innerHTML = html;
+      element.innerHTML = html;
     }
-    parent.appendChild(container);
-    return container;
+    return element;
   }
   
   function mousedown() {
@@ -116,5 +134,31 @@
   function click() {
     this.checked = !this.isChecked;
   }
+
+// снимает выделение с radio при повторном клике  
+  function uncheckElem(uncheckedElements, elem) {
+    uncheckedElements.push(elem);
+    
+    for(var i = 0; i < uncheckedElements.length; i++) {
+      uncheckedElements[i].addEventListener("mousedown", mousedown.bind(uncheckedElements[i])); // не перезапишет обработчик onclick
+      uncheckedElements[i].addEventListener("click", click.bind(uncheckedElements[i]));
+    }
+  }
   
+// создает всплывающую подсказку
+  function createTip(text) {
+    var questionMark = createElem({type: "span", html: "?", className: "toggleTip"});
+    var tip = createElem({type: "div", html: text, className: "tip"});
+    tip.hidden = true;
+    return {tip, questionMark};
+  }
   
+// дизейблит все !none элементы
+  function disableAnswers(notNone, clarification) {
+    for(var i = 0; i < notNone.length; i++) {
+      notNone[i].disabled = !notNone[i].disabled;
+    }
+    clarification.disabled = !clarification.disabled;
+  }
+  
+          
