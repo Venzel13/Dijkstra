@@ -154,31 +154,21 @@
       for (var i = 0; i < availableBlock.options.length; i++) {
         var option = availableBlock.options[i];
         if(option.selected) {
-          alert(option.innerHTML)
+          selectedBlock.appendChild(option);
         }
       }
     }
     
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    SAbutton.onclick = function() {
+      for (var i = 0; i < selectedBlock.options.length; i++) {
+        var option = selectedBlock.options[i];
+        if(option.selected) {
+          availableBlock.appendChild(option);
+        }
+      }
+    }
     return blockOfAnswers;
   }
-  
-  
   
   
   function mousedown() {
