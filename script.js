@@ -134,15 +134,47 @@
     var availableBlock = createElem({type: "select", html: null, className: "availableBlock"});
     var selectedBlock = createElem({type: "select", html: null, className: "selectedBlock"});
     availableBlock.size = answers.length;
+    availableBlock.multiple = true;
     selectedBlock.size = answers.length;
+    selectedBlock.multiple = true;
+    var ASbutton = createElem({type: "button", html: ">>", className: "ASbutton"});
+    var SAbutton = createElem({type: "button", html: "<<", className: "SAbutton"});
     
     blockOfAnswers.appendChild(availableBlock);
+    blockOfAnswers.appendChild(ASbutton);
+    blockOfAnswers.appendChild(SAbutton);
     blockOfAnswers.appendChild(selectedBlock);
     
     for (var i = 0; i < answers.length; i++) {
       var option = createElem({type: "option", html: answers[i].text});
       availableBlock.appendChild(option);
     }
+    
+    ASbutton.onclick = function() {
+      for (var i = 0; i < availableBlock.options.length; i++) {
+        var option = availableBlock.options[i];
+        if(option.selected) {
+          alert(option.innerHTML)
+        }
+      }
+    }
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     return blockOfAnswers;
   }
   
