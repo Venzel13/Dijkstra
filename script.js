@@ -131,8 +131,8 @@
   function createRangingBlock(answers) {
     var blockOfAnswers = createElem({type: "div"});
 
-    var availableBlock = createElem({type: "select", html: null, className: "rangingBlock"});
-    var selectedBlock = createElem({type: "select", html: null, className: "rangingBlock"});
+    var availableBlock = createElem({type: "select", html: null, className: "availableBlock"});
+    var selectedBlock = createElem({type: "select", html: null, className: "selectedBlock"});
     availableBlock.size = answers.length;
     selectedBlock.size = answers.length;
     
