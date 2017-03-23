@@ -62,6 +62,11 @@
    font-size: 28px;
  }
  
- .rangingBlock {
-   margin: 10px 0 0 100px;
+ .availableBlock {
+   margin: 10px 0 10px 0;
+ }
+
+ 
+ .selectedBlock {
+   margin: 10px 0 10px 150px;
  }
