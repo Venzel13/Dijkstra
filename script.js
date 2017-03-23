@@ -29,10 +29,11 @@
       container.appendChild(question);
       
       if (questions[i].tip) {
-        let {tip, questionMark} = createTip(questions[i].tip);
+        var {tip, questionMark} = createTip(questions[i].tip);
         container.appendChild(tip);
         question.appendChild(questionMark);
         
+        (function(tip) {
         // обработчик при клике на вопрос
         questionMark.onclick = function(ev) {
           ev.stopPropagation();
@@ -41,6 +42,7 @@
           tip.hidden = false;
           lastTip = tip;
         };
+        })(tip)
       }
       
       // ответы для разных типов вопросов
@@ -157,16 +159,4 @@
     clarification.disabled = !clarification.disabled;
   }
   
-  /*
-          questionMark.onclick = function(ev) {
-          ev.stopPropagation();
-          if (lastTip)
-            lastTip.hidden = true;
-          tip.hidden = false;
-          lastTip = function() { // обсудить с Марией
-            return tip
-          }
           
-        };
-      }
-  */
