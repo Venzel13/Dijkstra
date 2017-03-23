@@ -49,16 +49,19 @@
       switch (questions[i].type) {
         case "single":
           var single = createAnswers({answers: questions[i].body, type: "radio", name: i});
-          container.appendChild(single)
-          
+          container.appendChild(single);
           break;
         case "multiple":
           var multiple = createAnswers({answers: questions[i].body, type: "checkbox"});
-          container.appendChild(multiple)
+          container.appendChild(multiple);
           break;
         case "voluntary":
           var voluntary = createElem({type: "input"});
           container.appendChild(voluntary);
+          break;
+        case "ranging":
+          var blockOfAnswers = createRangingBlock(questions[i].body);
+          container.appendChild(blockOfAnswers);
           break;
       }
     }
@@ -79,7 +82,7 @@
     
     var blockOfAnswers = createElem({type: "div"});
     
-    for(var i = 0; i < answers.length; i++) {
+    for (var i = 0; i < answers.length; i++) {
       var label = createElem({type: "label"});
       blockOfAnswers.appendChild(label);
       elem = createElem({type: "input"});
@@ -115,7 +118,6 @@
 
 // создает контейнер с вопросом
   function createElem({type, html, className}) {
-    
     var element = document.createElement(type);
     if (className) {
       element.classList.add(className);
@@ -125,6 +127,27 @@
     }
     return element;
   }
+  
+  function createRangingBlock(answers) {
+    var blockOfAnswers = createElem({type: "div"});
+
+    var availableBlock = createElem({type: "select", html: null, className: "rangingBlock"});
+    var selectedBlock = createElem({type: "select", html: null, className: "rangingBlock"});
+    availableBlock.size = answers.length;
+    selectedBlock.size = answers.length;
+    
+    blockOfAnswers.appendChild(availableBlock);
+    blockOfAnswers.appendChild(selectedBlock);
+    
+    for (var i = 0; i < answers.length; i++) {
+      var option = createElem({type: "option", html: answers[i].text});
+      availableBlock.appendChild(option);
+    }
+    return blockOfAnswers;
+  }
+  
+  
+  
   
   function mousedown() {
     this.isChecked = this.checked;
