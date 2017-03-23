@@ -73,7 +73,7 @@
    {"header": "JavaScript",
    "question": "С какими фреймворками вам приходилось работать?",
    "type": "ranging",
-   "tip": "для выбора необходимо нажать >>",
+   "tip": "для выбора необходимо нажать кнопку >>  для возврата необходимо нажать <<",
    "body": [{"text":"jQuery"}, {"text":"LoDash"}, {"text":"Angular.js"}, {"text":"React.js"}, {"text":"Pug"}, {"text":"D3.js"}]
    }
  ]
