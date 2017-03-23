@@ -64,9 +64,10 @@
  
  .availableBlock {
    margin: 10px 0 10px 0;
+   width: 150px;
  }
 
- 
  .selectedBlock {
    margin: 10px 0 10px 150px;
+   width: 150px;
  }
