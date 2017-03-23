@@ -1,3 +1,8 @@
+  label {
+    display: block;
+    margin-left: 50px;
+  }
+
  .toggleTip {
    margin-left:3px;
    vertical-align: super;
@@ -55,4 +60,8 @@
    display: inline-block;
    margin-left: 100px;
    font-size: 28px;
+ }
+ 
+ .rangingBlock {
+   margin: 10px 0 0 100px;
  }
