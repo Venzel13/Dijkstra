@@ -125,6 +125,8 @@
   }
   
   function createRangingBlock(answers) {
+   answers = answers.sort(compareRangingAnswers);
+    
     var blockOfAnswers = createElem({type: "div"});
 
     var availableBlock = createElem({type: "select", html: null, className: "availableBlock"});
@@ -166,6 +168,9 @@
     return blockOfAnswers;
   }
   
+  function compareRangingAnswers(a, b) {
+    return a.text.localeCompare(b.text);
+  }
   
   function mousedown() {
     this.isChecked = this.checked;
@@ -198,5 +203,4 @@
     }
     clarification.disabled = !clarification.disabled;
   }
-  
           
