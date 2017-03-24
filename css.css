@@ -63,11 +63,30 @@
  }
  
  .availableBlock {
+   display: inline-block;
    margin: 10px 0 10px 0;
    width: 150px;
  }
 
  .selectedBlock {
-   margin: 10px 0 10px 150px;
+   display: inline-block;
+   margin: 10px 0 10px 100px;
    width: 150px;
  }
+ 
+ .buttons {
+   display: inline-block;
+   position:absolute;
+   top: 150px;
+   left: 180px;
+ }
+ .ASbutton {
+   display: block;
+ }
+ 
+ .SAbutton {
+   display: block;
+   margin-top: 10px;
+ }
+
+ 
