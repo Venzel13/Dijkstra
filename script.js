@@ -18,7 +18,7 @@
   })();
 
 
-  function createQuestionnaire(questions) { // questions объект аргументов
+  function createQuestionnaire(questions) {
     var lastTip;
     for (var i = 0; i < questions.length; i++) {
       var container = createElem({type: "div", html: null, className: "container"});
@@ -34,7 +34,6 @@
         question.appendChild(questionMark);
         
         (function(tip) {
-        // обработчик при клике на вопрос
         questionMark.onclick = function(ev) {
           ev.stopPropagation();
           if (lastTip)
@@ -45,7 +44,6 @@
         })(tip)
       }
       
-      // ответы для разных типов вопросов
       switch (questions[i].type) {
         case "single":
           var single = createAnswers({answers: questions[i].body, type: "radio", name: i});
@@ -65,7 +63,7 @@
           break;
       }
     }
-    // отслеживаем клик на документе
+    
     document.body.onclick = function() {
       if (lastTip) {
         lastTip.hidden = true;
@@ -73,7 +71,6 @@
     };
   }
 
-// создает варианты ответов для каждого контейнера с вопросом
   function createAnswers({answers, type, name}) {
     var notNone = [];
     var uncheckedElements = [];
@@ -116,7 +113,6 @@
     
   }
 
-// создает контейнер с вопросом
   function createElem({type, html, className}) {
     var element = document.createElement(type);
     if (className) {
@@ -178,17 +174,16 @@
     this.checked = !this.isChecked;
   }
 
-// снимает выделение с radio при повторном клике  
+// uncheck radio-button when element is clicked again
   function uncheckElem(uncheckedElements, elem) {
     uncheckedElements.push(elem);
     
     for(var i = 0; i < uncheckedElements.length; i++) {
-      uncheckedElements[i].addEventListener("mousedown", mousedown.bind(uncheckedElements[i])); // не перезапишет обработчик onclick
+      uncheckedElements[i].addEventListener("mousedown", mousedown.bind(uncheckedElements[i])); // onclick handler won't be rewritten
       uncheckedElements[i].addEventListener("click", click.bind(uncheckedElements[i]));
     }
   }
   
-// создает всплывающую подсказку
   function createTip(text) {
     var questionMark = createElem({type: "span", html: "?", className: "toggleTip"});
     var tip = createElem({type: "div", html: text, className: "tip"});
@@ -196,7 +191,7 @@
     return {tip, questionMark};
   }
   
-// дизейблит все !none элементы
+// disable not none elements
   function disableAnswers(notNone, clarification) {
     for(var i = 0; i < notNone.length; i++) {
       notNone[i].disabled = !notNone[i].disabled;
