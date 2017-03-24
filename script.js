@@ -138,9 +138,12 @@
     var ASbutton = createElem({type: "button", html: ">>", className: "ASbutton"});
     var SAbutton = createElem({type: "button", html: "<<", className: "SAbutton"});
     
+    var buttons = createElem({type: "div", html: null, className: "buttons"});
+    
     blockOfAnswers.appendChild(availableBlock);
-    blockOfAnswers.appendChild(ASbutton);
-    blockOfAnswers.appendChild(SAbutton);
+    buttons.appendChild(ASbutton);
+    buttons.appendChild(SAbutton);
+    blockOfAnswers.appendChild(buttons);
     blockOfAnswers.appendChild(selectedBlock);
     
     for (var i = 0; i < answers.length; i++) {
@@ -162,7 +165,7 @@
       for (var i = 0; i < selectedBlock.options.length; i++) {
         var option = selectedBlock.options[i];
         if(option.selected) {
-          availableBlock.insertBefore(option, availableBlock.options[option.i]); // correct later
+          availableBlock.insertBefore(option, availableBlock.options[option.i]);
         }
       }
     }
