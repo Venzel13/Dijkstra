@@ -146,6 +146,7 @@
     for (var i = 0; i < answers.length; i++) {
       var option = createElem({type: "option", html: answers[i].text});
       availableBlock.appendChild(option);
+      
     }
     
     ASbutton.onclick = function() {
@@ -161,8 +162,9 @@
       for (var i = 0; i < selectedBlock.options.length; i++) {
         var option = selectedBlock.options[i];
         if(option.selected) {
-          availableBlock.appendChild(option);
+          availableBlock.insertBefore(option, availableBlock.options[1]); // correct later
         }
+
       }
     }
     return blockOfAnswers;
