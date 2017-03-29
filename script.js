@@ -1,9 +1,14 @@
   (function() {
-    var xhr = new XMLHttpRequest();
-
-    xhr.open('GET', 'questions.json', true);
-    xhr.send();
     
+    var xhr = new XMLHttpRequest();
+    
+    function configureRequest() {
+      xhr.open('GET', 'questions.json', true);
+      xhr.send();
+    }
+    
+    configureRequest();
+
     function loadQuestions() {
       if (xhr.readyState != 4) return;
       var questions = JSON.parse(xhr.responseText);
