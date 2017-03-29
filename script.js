@@ -102,7 +102,6 @@
       this._label = document.createElement('label');
       this._label.innerHTML = this._options[this._i].text;
       this._li.appendChild(this._label);
-      Single.prototype.radio.apply(this, arguments);
     }
   }
   
@@ -117,7 +116,7 @@
     return this._ul;
   }
   
-  Single.prototype.radio = function() {
+  Single.prototype.createRadio = function() {
     var input = document.createElement('input');
     input.type = 'radio';
     input.name = this._i;
@@ -126,9 +125,7 @@
   
   Single.prototype.createList = function() {
     Answers.prototype.createList.apply(this, arguments);
-    
-      
-    
+    this.createRadio();
   }
   
   function Multiple(options) {
