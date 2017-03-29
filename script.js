@@ -13,7 +13,7 @@
     xhr.onreadystatechange = loadQuestions;
   })();
   
-  function createQuestionnaire(questions) { // функция получается очень большая, хоть она и основная. Ничего? или стоит как то разбить функционал?
+  function createQuestionnaire(questions) { 
     for (var i = 0; i < questions.length; i++) {
       var container = document.getElementById('questionnaire').appendChild(createContainer());
       container.appendChild(createHeader(questions[i].header));
@@ -83,35 +83,59 @@
   }
   
   
-  function Single(options) {
+  // Common constructor
+  function Answers(options) {
     this._options = options;
     this._ul;
   }
+  
+  Answers.prototype.getElem = function() {
+    if(!this._ul) this.createList();
+    return this._ul;
+  }
+  
+  Answers.prototype.createList = function() {
+    this._ul = document.createElement('ul');
+    for (this._i = 0; this._i < this._options.length; this._i++) {
+      this._li = document.createElement('li');
+      this._ul.appendChild(this._li);
+      this._label = document.createElement('label');
+      this._label.innerHTML = this._options[this._i].text;
+      this._li.appendChild(this._label);
+      Single.prototype.radio.apply(this, arguments);
+    }
+  }
+  
+  function Single(options) {
+    Answers.apply(this, arguments);
+  }
+  
+  Single.prototype = Object.create(Answers.prototype);
   
   Single.prototype.getElem = function() {
     if(!this._ul) this.createList();
     return this._ul;
   }
   
+  Single.prototype.radio = function() {
+    var input = document.createElement('input');
+    input.type = 'radio';
+    input.name = this._i;
+    this._label.appendChild(input);
+  }
+  
   Single.prototype.createList = function() {
-    this._ul = document.createElement('ul');
-    for (var i = 0; i < this._options.length; i++) {
-      var li = document.createElement('li');
-      this._ul.appendChild(li);
-      var label = document.createElement('label');
-      label.innerHTML = this._options[i].text;
-      li.appendChild(label);
-      var input = document.createElement('input');
-      input.type = 'radio';
-      input.name = i;
-      label.appendChild(input);
-    }
+    Answers.prototype.createList.apply(this, arguments);
+    
+      
+    
   }
   
   function Multiple(options) {
-    this._options = options;
-    this._ul;
+    Answers.apply(this, arguments);
   }
+  
+  Multiple.prototype = Object.create(Answers.prototype);
   
   Multiple.prototype.getElem = function() {
     if(!this._ul) this.createList();
@@ -119,15 +143,8 @@
   }
   
   Multiple.prototype.createList = function() {
-    this._ul = document.createElement('ul');
-    for (var i = 0; i < this._options.length; i++) {
-      var li = document.createElement('li');
-      this._ul.appendChild(li);
-      var label = document.createElement('label');
-      label.innerHTML = this._options[i].text;
-      li.appendChild(label);
+    Answers.prototype.createList.apply(this, arguments);
       var input = document.createElement('input');
       input.type = 'checkbox';
-      label.appendChild(input);
-    }
+      this._label.appendChild(input);
   }
