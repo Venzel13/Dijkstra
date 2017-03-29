@@ -32,11 +32,12 @@
           break;
         case "multiple":
           var multiple = new Multiple(questions[i].body);
-          var elem = multiple.getElem();
+          elem = multiple.getElem();
           container.appendChild(elem);
           break;
-          
         case "voluntary":
+          var voluntary = document.createElement('input');
+          container.appendChild(voluntary)
           break;
           
         case "ranging":
@@ -120,13 +121,14 @@
     var input = document.createElement('input');
     input.type = 'radio';
     input.name = this._i;
-    this._label.appendChild(input);
+    this._label.insertBefore(input, this._label.firstChild);
   }
   
   Single.prototype.createList = function() {
     Answers.prototype.createList.apply(this, arguments);
     this.createRadio();
   }
+  
   
   function Multiple(options) {
     Answers.apply(this, arguments);
@@ -139,9 +141,14 @@
     return this._ul;
   }
   
+  Multiple.prototype.createCheckbox = function() {
+    var input = document.createElement('input');
+    input.type = 'checkbox';
+    this._label.insertBefore(input, this._label.firstChild);
+    
+  }
+  
   Multiple.prototype.createList = function() {
     Answers.prototype.createList.apply(this, arguments);
-      var input = document.createElement('input');
-      input.type = 'checkbox';
-      this._label.appendChild(input);
+    this.createCheckbox();
   }
