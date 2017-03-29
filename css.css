@@ -1,8 +1,7 @@
-  label {
-    display: block;
-    margin-left: 50px;
-  }
-
+ ul {
+   list-style:none;
+ }
+ 
  .toggleTip {
    margin-left:3px;
    vertical-align: super;
@@ -61,32 +60,3 @@
    margin-left: 100px;
    font-size: 28px;
  }
- 
- .availableBlock {
-   display: inline-block;
-   margin: 10px 0 10px 0;
-   width: 150px;
- }
-
- .selectedBlock {
-   display: inline-block;
-   margin: 10px 0 10px 100px;
-   width: 150px;
- }
- 
- .buttons {
-   display: inline-block;
-   position:absolute;
-   top: 150px;
-   left: 180px;
- }
- .ASbutton {
-   display: block;
- }
- 
- .SAbutton {
-   display: block;
-   margin-top: 10px;
- }
-
- 
