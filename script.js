@@ -92,11 +92,10 @@
   // Common constructor
   function Answers(options) {
     this._options = options;
-    this._ul;
   }
   
   Answers.prototype.getElem = function() {
-    if(!this._ul) this.createList();
+    this.createList();
     return this._ul;
   }
   
