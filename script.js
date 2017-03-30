@@ -108,7 +108,12 @@
       this._label = document.createElement('label');
       this._label.innerHTML = this._options[this._i].text;
       this._li.appendChild(this._label);
+      this.createCheck();
     }
+  }
+  
+  Answers.prototype.createCheck = function() {
+    throw Error("Not implemented");
   }
   
   function Single(options) {
@@ -117,43 +122,25 @@
   
   Single.prototype = Object.create(Answers.prototype);
   
-  Single.prototype.getElem = function() {
-    if(!this._ul) this.createList();
-    return this._ul;
-  }
-  
-  Single.prototype.createRadio = function() {
+
+  Single.prototype.createCheck = function() {
     var input = document.createElement('input');
     input.type = 'radio';
     input.name = this._i;
     this._label.insertBefore(input, this._label.firstChild);
   }
   
-  Single.prototype.createList = function() {
-    Answers.prototype.createList.apply(this, arguments);
-    this.createRadio();
-  }
-  
-  
+
   function Multiple(options) {
     Answers.apply(this, arguments);
   }
   
   Multiple.prototype = Object.create(Answers.prototype);
   
-  Multiple.prototype.getElem = function() {
-    if(!this._ul) this.createList();
-    return this._ul;
-  }
-  
-  Multiple.prototype.createCheckbox = function() {
+
+  Multiple.prototype.createCheck = function() {
     var input = document.createElement('input');
     input.type = 'checkbox';
     this._label.insertBefore(input, this._label.firstChild);
     
-  }
-  
-  Multiple.prototype.createList = function() {
-    Answers.prototype.createList.apply(this, arguments);
-    this.createCheckbox();
   }
