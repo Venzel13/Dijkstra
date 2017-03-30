@@ -18,21 +18,16 @@
     xhr.onreadystatechange = loadQuestions;
   })();
   
-  function createQuestionnaire(questions) { 
+  function createQuestionnaire(questions) {
     for (var i = 0; i < questions.length; i++) {
-      var container = document.getElementById('questionnaire').appendChild(createContainer());
-      container.appendChild(createHeader(questions[i].header));
-      var question = container.appendChild(createQuestion(questions[i].question));
-      
-      if(questions[i].tip) {
-        var tip = container.appendChild(createTip(questions[i].tip));
-        var questionMark = question.appendChild(createQuestionMark());
-      }
+      var question = new Question({header:questions[i].header, question:questions[i].question});
+      var elem = question.getElem();
+      var container = document.getElementById('questionnaire').appendChild(elem);
       
       switch(questions[i].type) {
         case "single":
           var single = new Single(questions[i].body);
-          var elem = single.getElem();
+          elem = single.getElem();
           container.appendChild(elem);
           break;
         case "multiple":
@@ -42,36 +37,45 @@
           break;
         case "voluntary":
           var voluntary = document.createElement('input');
-          container.appendChild(voluntary)
+          voluntary.className = 'voluntary';
+          container.appendChild(voluntary);
           break;
-          
         case "ranging":
           break;
       }
     }
   }
-  
-  function createContainer() {
-    var container = document.createElement('div');
-    container.className = 'container';
-    
-    return container;
+
+  function Question(options) {
+    this._optionsHeader = options.header;
+    this._optionsQuestion = options.question;
   }
   
-  function createHeader(text) {
-    var header = document.createElement('p');
-    header.innerHTML = text;
-    
-    return header;
-  }
+  Question.prototype.getElem = function() {
+    this._createContainer();
+    this._createHeader(this._optionsHeader);
+    this._createQuestion(this._optionsQuestion);
+    return this._container;
+  };
   
-  function createQuestion(text) {
-    var question = document.createElement('div');
-    question.innerHTML = text;
-    
-    return question;
-  }
+  Question.prototype._createContainer = function() {
+    this._container = document.createElement('div');
+    this._container.className = 'container';
+  };
   
+  Question.prototype._createHeader = function(text) {
+    this._header = document.createElement('p');
+    this._header.innerHTML = text;
+    this._container.appendChild(this._header);
+  };
+  
+  Question.prototype._createQuestion = function(text) {
+    this._question = document.createElement('div');
+    this._question.innerHTML = text;
+    this._container.appendChild(this._question);
+  };
+  
+
   function createTip(text) {
     var tip = document.createElement('div');
     tip.innerHTML = text;
@@ -87,59 +91,56 @@
     
     return questionMark;
   }
-  
-  
-  // Common constructor
-  function Answers(options) {
+
+  function Answer(options) {
     this._options = options;
   }
   
-  Answers.prototype.getElem = function() {
+  Answer.prototype = Object.create(Question.prototype);
+  
+  Answer.prototype.getElem = function() {
     this.createList();
     return this._ul;
-  }
+  };
   
-  Answers.prototype.createList = function() {
+  Answer.prototype.createList = function() {
     this._ul = document.createElement('ul');
-    for (this._i = 0; this._i < this._options.length; this._i++) {
+    for (var i = 0; i < this._options.length; i++) {
       this._li = document.createElement('li');
       this._ul.appendChild(this._li);
       this._label = document.createElement('label');
-      this._label.innerHTML = this._options[this._i].text;
+      this._label.innerHTML = this._options[i].text;
       this._li.appendChild(this._label);
       this.createCheck();
     }
-  }
+  };
   
-  Answers.prototype.createCheck = function() {
+  Answer.prototype.createCheck = function() {
     throw Error("Not implemented");
-  }
+  };
   
   function Single(options) {
-    Answers.apply(this, arguments);
+    Answer.apply(this, arguments);
   }
   
-  Single.prototype = Object.create(Answers.prototype);
-  
+  Single.prototype = Object.create(Answer.prototype);
 
-  Single.prototype.createCheck = function() {
+  Single.prototype.createCheck = function(i) {
     var input = document.createElement('input');
     input.type = 'radio';
-    input.name = this._i;
+    input.name = i;
     this._label.insertBefore(input, this._label.firstChild);
-  }
+  };
   
-
   function Multiple(options) {
-    Answers.apply(this, arguments);
+    Answer.apply(this, arguments);
   }
   
-  Multiple.prototype = Object.create(Answers.prototype);
+  Multiple.prototype = Object.create(Answer.prototype);
   
-
   Multiple.prototype.createCheck = function() {
     var input = document.createElement('input');
     input.type = 'checkbox';
     this._label.insertBefore(input, this._label.firstChild);
-    
-  }
+  };
+  
