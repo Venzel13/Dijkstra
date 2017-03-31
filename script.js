@@ -75,7 +75,7 @@
     this._container.appendChild(this._question);
   };
   
-
+  /*
   function createTip(text) {
     var tip = document.createElement('div');
     tip.innerHTML = text;
@@ -84,6 +84,7 @@
     return tip;
   }
   
+  
   function createQuestionMark() {
     var questionMark = document.createElement('span');
     questionMark.innerHTML = '?';
@@ -91,6 +92,7 @@
     
     return questionMark;
   }
+  */
 
   function Answer(options) {
     this._options = options;
@@ -105,6 +107,7 @@
   
   Answer.prototype.createList = function() {
     this._ul = document.createElement('ul');
+    this._notNone = [];
     for (var i = 0; i < this._options.length; i++) {
       this._li = document.createElement('li');
       this._ul.appendChild(this._li);
@@ -112,11 +115,28 @@
       this._label.innerHTML = this._options[i].text;
       this._li.appendChild(this._label);
       this.createCheck();
+      
+      if(!this._options[i].none) {
+        this._notNone.push(this._input);
+      }
+      this.disable(i);
     }
   };
   
   Answer.prototype.createCheck = function() {
     throw Error("Not implemented");
+  };
+  
+  Answer.prototype.disable = function(i) {
+    if(this._options[i].none) {
+      var self = this;
+      
+      this._input.onclick = function() {
+        for (i = 0; i < self._notNone.length; i++) {
+          self._notNone[i].disabled = !self._notNone[i].disabled;
+        }
+      };
+    }
   };
   
   function Single(options) {
@@ -126,10 +146,10 @@
   Single.prototype = Object.create(Answer.prototype);
 
   Single.prototype.createCheck = function(i) {
-    var input = document.createElement('input');
-    input.type = 'radio';
-    input.name = i;
-    this._label.insertBefore(input, this._label.firstChild);
+    this._input = document.createElement('input');
+    this._input.type = 'radio';
+    this._input.name = i;
+    this._label.insertBefore(this._input, this._label.firstChild);
   };
   
   function Multiple(options) {
@@ -139,8 +159,8 @@
   Multiple.prototype = Object.create(Answer.prototype);
   
   Multiple.prototype.createCheck = function() {
-    var input = document.createElement('input');
-    input.type = 'checkbox';
-    this._label.insertBefore(input, this._label.firstChild);
+    this._input = document.createElement('input');
+    this._input.type = 'checkbox';
+    this._label.insertBefore(this._input, this._label.firstChild);
   };
   
