@@ -24,11 +24,15 @@
       var elem = question.createContainer();
       var container = document.getElementById('questionnaire').appendChild(elem);
       
-      if(questions[i].tip) {
+      if (questions[i].tip) {
         question.createQuestionMark();
+        
+        var tip = new Tip(questions[i].tip);
+        elem = tip.createTip();
+        container.appendChild(elem);
       }
       
-      switch(questions[i].type) {
+      switch (questions[i].type) {
         case "single":
           var single = new Single(questions[i].body);
           elem = single.createElemList();
@@ -83,47 +87,21 @@
     this._question.appendChild(questionMark);
   };
   
-  /*
   function Tip(options) {
-    this.options = options;
+    this._options = options;
   }
   
-  Tip.prototype = Object.create(Question.prototype);
-  
-  Tip.prototype.createTip = function(text) {
-    this.createQuestionMark();
+  Tip.prototype.createTip = function() {
     var tip = document.createElement('div');
-    tip.innerHTML = text;
+    tip.innerHTML = this._options;
     tip.className = 'tip';
     
     return tip;
   };
-  
-  
-  
-  function createTip(text) {
-    var tip = document.createElement('div');
-    tip.innerHTML = text;
-    tip.className = 'tip';
-    
-    return tip;
-  }
-  
-  
-  function createQuestionMark() {
-    var questionMark = document.createElement('span');
-    questionMark.innerHTML = '?';
-    questionMark.className = 'toggleTip';
-    
-    return questionMark;
-  }
-  */
 
   function Answer(options) {
     this._options = options;
   }
-  
-  Answer.prototype = Object.create(Question.prototype);
   
   Answer.prototype.createElemList = function() {
     this._ul = document.createElement('ul');
@@ -134,22 +112,21 @@
       this._label = document.createElement('label');
       this._label.innerHTML = this._options[i].text;
       li.appendChild(this._label);
-      this.createCheck();
+      this._createCheck();
       
-      if(!this._options[i].none) {
+      if (!this._options[i].none) {
         this._notNone.push(this._input);
       }
-      
-      if(this._options[i].other) {                     // может вынести из createList?!
-        this.toggleClarification();                             // change to this._name instead of this.name  !?!?!?!?!
+      if (this._options[i].other) {                  
+        this.toggleClarification();                    
       }
       
-      this.disable(i);                                 // может вынести из createList?!
+      this.disable(i);          
     }
     return this._ul;
   };
   
-  Answer.prototype.createCheck = function() {
+  Answer.prototype._createCheck = function() {
     throw Error("Not implemented");
   };
   
@@ -187,7 +164,7 @@
   
   Single.prototype = Object.create(Answer.prototype);
 
-  Single.prototype.createCheck = function(i) {
+  Single.prototype._createCheck = function(i) {
     this._input = document.createElement('input');
     this._input.type = 'radio';
     this._input.name = i;
@@ -200,7 +177,7 @@
   
   Multiple.prototype = Object.create(Answer.prototype);
   
-  Multiple.prototype.createCheck = function() {
+  Multiple.prototype._createCheck = function() {
     this._input = document.createElement('input');
     this._input.type = 'checkbox';
     this._label.insertBefore(this._input, this._label.firstChild);
