@@ -119,12 +119,32 @@
       if(!this._options[i].none) {
         this._notNone.push(this._input);
       }
-      this.disable(i);
+      
+      if(this._options[i].other) {                     // может вынести из createList?!
+        this.toggleClarification();                             // change to this._name instead of this.name  !?!?!?!?!
+      }
+      
+      this.disable(i);                                 // может вынести из createList?!
     }
   };
   
   Answer.prototype.createCheck = function() {
     throw Error("Not implemented");
+  };
+  
+  Answer.prototype.createClarification = function() {
+    this._clarification = document.createElement('input');
+    this._clarification.hidden = true;
+    this._label.appendChild(this._clarification);
+  };
+  
+  Answer.prototype.toggleClarification = function() {
+    this.createClarification();
+    var self = this;
+    
+    this._input.onclick = function() {
+      self._clarification.hidden = !self._clarification.hidden;
+    };
   };
   
   Answer.prototype.disable = function(i) {
@@ -135,6 +155,7 @@
         for (i = 0; i < self._notNone.length; i++) {
           self._notNone[i].disabled = !self._notNone[i].disabled;
         }
+        self._clarification.disabled = !self._clarification.disabled;
       };
     }
   };
