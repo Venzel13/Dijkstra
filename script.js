@@ -21,18 +21,22 @@
   function createQuestionnaire(questions) {
     for (var i = 0; i < questions.length; i++) {
       var question = new Question({header:questions[i].header, question:questions[i].question});
-      var elem = question.getElem();
+      var elem = question.createContainer();
       var container = document.getElementById('questionnaire').appendChild(elem);
+      
+      if(questions[i].tip) {
+        question.createQuestionMark();
+      }
       
       switch(questions[i].type) {
         case "single":
           var single = new Single(questions[i].body);
-          elem = single.getElem();
+          elem = single.createElemList();
           container.appendChild(elem);
           break;
         case "multiple":
           var multiple = new Multiple(questions[i].body);
-          elem = multiple.getElem();
+          elem = multiple.createElemList();
           container.appendChild(elem);
           break;
         case "voluntary":
@@ -51,22 +55,19 @@
     this._optionsQuestion = options.question;
   }
   
-  Question.prototype.getElem = function() {
-    this._createContainer();
+  Question.prototype.createContainer = function() {
+    this._container = document.createElement('div');
+    this._container.className = 'container';
     this._createHeader(this._optionsHeader);
     this._createQuestion(this._optionsQuestion);
+    
     return this._container;
   };
   
-  Question.prototype._createContainer = function() {
-    this._container = document.createElement('div');
-    this._container.className = 'container';
-  };
-  
   Question.prototype._createHeader = function(text) {
-    this._header = document.createElement('p');
-    this._header.innerHTML = text;
-    this._container.appendChild(this._header);
+    var header = document.createElement('p');
+    header.innerHTML = text;
+    this._container.appendChild(header);
   };
   
   Question.prototype._createQuestion = function(text) {
@@ -75,7 +76,31 @@
     this._container.appendChild(this._question);
   };
   
+  Question.prototype.createQuestionMark = function() {
+    var questionMark = document.createElement('span');
+    questionMark.innerHTML = '?';
+    questionMark.className = 'toggleTip';
+    this._question.appendChild(questionMark);
+  };
+  
   /*
+  function Tip(options) {
+    this.options = options;
+  }
+  
+  Tip.prototype = Object.create(Question.prototype);
+  
+  Tip.prototype.createTip = function(text) {
+    this.createQuestionMark();
+    var tip = document.createElement('div');
+    tip.innerHTML = text;
+    tip.className = 'tip';
+    
+    return tip;
+  };
+  
+  
+  
   function createTip(text) {
     var tip = document.createElement('div');
     tip.innerHTML = text;
@@ -100,20 +125,15 @@
   
   Answer.prototype = Object.create(Question.prototype);
   
-  Answer.prototype.getElem = function() {
-    this.createList();
-    return this._ul;
-  };
-  
-  Answer.prototype.createList = function() {
+  Answer.prototype.createElemList = function() {
     this._ul = document.createElement('ul');
     this._notNone = [];
     for (var i = 0; i < this._options.length; i++) {
-      this._li = document.createElement('li');
-      this._ul.appendChild(this._li);
+      var li = document.createElement('li');
+      this._ul.appendChild(li);
       this._label = document.createElement('label');
       this._label.innerHTML = this._options[i].text;
-      this._li.appendChild(this._label);
+      li.appendChild(this._label);
       this.createCheck();
       
       if(!this._options[i].none) {
@@ -126,6 +146,7 @@
       
       this.disable(i);                                 // может вынести из createList?!
     }
+    return this._ul;
   };
   
   Answer.prototype.createCheck = function() {
