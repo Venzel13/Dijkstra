@@ -47,6 +47,9 @@
           container.appendChild(voluntary);
           break;
         case "ranging":
+          var ranging = new Ranging(questions[i].body);
+          elem = ranging.createRangingBlock();
+          container.appendChild(elem);
           break;
       }
     }
@@ -204,4 +207,93 @@
     this._input.type = 'checkbox';
     this._label.insertBefore(this._input, this._label.firstChild);
   };
+  
+  
+  function Ranging(options) {
+    this._options = options;
+    this._options = this._options.sort(this.compare);
+  }
+  
+  Ranging.prototype.compare = function(a, b) {
+    return a.text.localeCompare(b.text);
+  };
+  
+  Ranging.prototype.createRangingBlock = function() {
+    this._rangingBlock = document.createElement('div');
+    
+    this._createAvailableBlock();
+    this._createButtons();
+    this._createSelectedBlock();
+    this.selectOption();
+    this.returnOption();
+    
+    return this._rangingBlock;
+  };
+  
+  Ranging.prototype._createAvailableBlock = function() {
+    this._availableBlock = document.createElement('select');
+    this._availableBlock.className = 'availableBlock';
+    this._availableBlock.size = this._options.length;
+    
+    for (var i = 0; i < this._options.length; i++) {
+      var option = document.createElement('option');
+      option.innerHTML = this._options[i].text;
+      this._availableBlock.appendChild(option);
+    }
+    
+    this._rangingBlock.appendChild(this._availableBlock);
+  }
+  
+  Ranging.prototype._createSelectedBlock = function() {
+    this._selectedBlock = document.createElement('select');
+    this._selectedBlock.className = 'selectedBlock';
+    this._selectedBlock.size = this._options.length;
+    
+    this._rangingBlock.appendChild(this._selectedBlock);
+  }
+  
+  Ranging.prototype._createButtons = function() {
+    var buttonsBlock = document.createElement('div');
+    buttonsBlock.className = 'buttonsBlock';
+    
+    this._selectButton = document.createElement('button');
+    this._selectButton.innerHTML = '->';
+    this._selectButton.className = 'selectButton';
+    buttonsBlock.appendChild(this._selectButton);
+    
+    this._returnButton = document.createElement('button');
+    this._returnButton.innerHTML = '<-';
+    this._returnButton.className = 'returnButton';
+    buttonsBlock.appendChild(this._returnButton);
+    
+    this._rangingBlock.appendChild(buttonsBlock);
+  };
+  
+  Ranging.prototype.selectOption = function() {
+    var self = this;
+  
+    this._selectButton.onclick = function() {
+      for (var i = 0; i < self._availableBlock.length; i++) {
+        var option = self._availableBlock.options[i];
+        
+        if(option.selected) {
+          self._selectedBlock.appendChild(option);
+        }
+      }
+    };
+  };
+  
+  Ranging.prototype.returnOption = function() {
+    var self = this;
+    
+    this._returnButton.onclick = function() {
+      for (var i = 0; i < self._selectedBlock.length; i++) {
+        var option = self._selectedBlock.options[i];
+        
+        if(option.selected) {
+          self._availableBlock.appendChild(option)
+        }
+      }
+    }
+  }
   
