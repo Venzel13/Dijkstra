@@ -91,7 +91,7 @@
     this._questionMark = document.createElement('span');
     this._questionMark.innerHTML = '?';
     this._questionMark.className = 'toggleTip';
-    this._question.appendChild(this._questionMark); // убрать appendChild из createFunc(), а в других методах вызывать parentNode.appendChild(createFunc());
+    this._question.appendChild(this._questionMark);
   };
   
   Question.prototype.createTip = function(text) {
@@ -135,7 +135,7 @@
         this.uncheckSingle();
       }
       if (this._options[i].other) {                  
-        this.toggleClarification();                                // СКОРРЕКТИРОВАТЬ ВСЕ НЕОБХОДИМЫЕ this._ В ДОКУМЕНТЕ (на черточку)
+        this.toggleClarification();
       }
       
       this.disable(i);
@@ -150,11 +150,14 @@
   Answer.prototype.createClarification = function() {
     this._clarification = document.createElement('input');
     this._clarification.hidden = true;
-    this._label.appendChild(this._clarification); //  убрать appendChild из createFunc(), а в других методах вызывать parentNode.appendChild(createFunc());
+    
+    return this._clarification;
   };
   
   Answer.prototype.toggleClarification = function() {
-    this.createClarification();
+    var clarification = this.createClarification();
+    this._label.appendChild(clarification);
+    
     var self = this;
     
     this._input.onclick = function() {
