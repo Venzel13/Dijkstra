@@ -106,7 +106,7 @@
   };
 
   Question.prototype.showTip = function(e) {
-    e.stopPropagation(); // the handler shouldn't be rewritten
+    e.stopPropagation();                           // the handler shouldn't be redefined
     this.hidden = false;
   };
   
