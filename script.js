@@ -262,6 +262,7 @@
     return this._availableBlock;
   };
   
+  
   Ranging.prototype._createSelectedBlock = function() {
     this._selectedBlock = document.createElement('select');
     this._selectedBlock.className = 'selectedBlock';
