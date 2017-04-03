@@ -63,8 +63,12 @@
   Question.prototype.createContainer = function() {
     this._container = document.createElement('div');
     this._container.className = 'container';
-    this._createHeader(this._optionsHeader);
-    this._createQuestion(this._optionsQuestion);
+    
+    var header = this._createHeader(this._optionsHeader);
+    this._container.appendChild(header);
+    
+    var question = this._createQuestion(this._optionsQuestion);
+    this._container.appendChild(question);
     
     return this._container;
   };
@@ -72,13 +76,15 @@
   Question.prototype._createHeader = function(text) {
     var header = document.createElement('p');
     header.innerHTML = text;
-    this._container.appendChild(header);
+    
+    return header;
   };
   
   Question.prototype._createQuestion = function(text) {
     this._question = document.createElement('div');
     this._question.innerHTML = text;
-    this._container.appendChild(this._question);
+    
+    return this._question;
   };
   
   Question.prototype.createQuestionMark = function() {
@@ -99,9 +105,8 @@
     return this._tip;
   };
 
-  
   Question.prototype.showTip = function(e) {
-    e.stopPropagation();
+    e.stopPropagation(); // the handler shouldn't be rewritten
     this.hidden = false;
   };
   
@@ -225,9 +230,15 @@
   Ranging.prototype.createRangingBlock = function() {
     this._rangingBlock = document.createElement('div');
     
-    this._createAvailableBlock();
-    this._createButtons();
-    this._createSelectedBlock();
+    var availableBlock = this._createAvailableBlock();
+    this._rangingBlock.appendChild(availableBlock);
+    
+    var buttonsBlock = this._createButtons();
+    this._rangingBlock.appendChild(buttonsBlock);
+    
+    var selectedBlock = this._createSelectedBlock();
+    this._rangingBlock.appendChild(selectedBlock);
+  
     this.selectOption();
     this.returnOption();
     
@@ -245,8 +256,7 @@
       option.i = i;                                       // save initial index
       this._availableBlock.appendChild(option);
     }
-    
-    this._rangingBlock.appendChild(this._availableBlock);
+    return this._availableBlock;
   };
   
   Ranging.prototype._createSelectedBlock = function() {
@@ -254,7 +264,7 @@
     this._selectedBlock.className = 'selectedBlock';
     this._selectedBlock.size = this._options.length;
     
-    this._rangingBlock.appendChild(this._selectedBlock);
+    return this._selectedBlock;
   };
   
   Ranging.prototype._createButtons = function() {
@@ -271,7 +281,7 @@
     this._returnButton.className = 'returnButton';
     buttonsBlock.appendChild(this._returnButton);
     
-    this._rangingBlock.appendChild(buttonsBlock);
+    return buttonsBlock;
   };
   
   Ranging.prototype.selectOption = function() {
