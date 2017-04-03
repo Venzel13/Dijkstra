@@ -166,9 +166,9 @@
   };
   
   Answer.prototype.disable = function(i) {
+    var self = this;
+    
     if(this._options[i].none) {
-      var self = this;
-      
       this._input.onclick = function() {
         for (i = 0; i < self._notNone.length; i++) {
           self._notNone[i].disabled = !self._notNone[i].disabled;
@@ -187,7 +187,7 @@
   Single.prototype._createCheck = function(i) {
     this._input = document.createElement('input');
     this._input.type = 'radio';
-    this._input.name = i;                                             // изменить поведение, чтобы name внутри одного блока был одинаков
+    this._input.name = i;                                             // behaviour has to be changed (the same name inside each blocks)
     this._label.insertBefore(this._input, this._label.firstChild);
   };
   
