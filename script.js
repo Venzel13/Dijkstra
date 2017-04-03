@@ -217,7 +217,7 @@
     this._label.insertBefore(this._input, this._label.firstChild);
   };
   
-  Multiple.prototype.uncheckSingle = function() {
+  Multiple.prototype.uncheckSingle = function() { // to avoid redefinition
   };
   
   
