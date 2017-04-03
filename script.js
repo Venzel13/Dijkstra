@@ -92,21 +92,21 @@
     this._tip = document.createElement('div');
     this._tip.innerHTML = text;
     this._tip.className = 'tip';
-    this.toggleTip();
-    
+    this._tip.hidden = true;
+    this._questionMark.addEventListener('click', this.showTip.bind(this._tip));
+    document.body.addEventListener('click', this.hideTip.bind(this._tip));
+
     return this._tip;
   };
+
   
-  Question.prototype.toggleTip = function() {
-    var self = this;
-    
-    this._questionMark.onclick = function(e) {
-      e.stopPropagation();
-      self._tip.hidden = true;
-    };
-    document.body.onclick = function() {
-      self._tip.hidden = false;
-    };
+  Question.prototype.showTip = function(e) {
+    e.stopPropagation();
+    this.hidden = false;
+  };
+  
+  Question.prototype.hideTip = function() {
+    this.hidden = true;
   };
 
   function Answer(options) {
@@ -295,7 +295,7 @@
       for (var i = 0; i < self._selectedBlock.length; i++) {
         var option = self._selectedBlock.options[i];
         
-        // search for a convenient index so as to put an element
+        // search for a convenient index so as to put an element into a correct place
         for (var j = 0; j < self._availableBlock.length; j++) {
           if(self._availableBlock.options[j].i >= self._selectedBlock.options[i].i) {
             break;
