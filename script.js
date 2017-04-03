@@ -126,6 +126,8 @@
       
       if (!this._options[i].none) {
         this._notNone.push(this._input);
+      } else {
+        this.uncheckSingle();
       }
       if (this._options[i].other) {                  
         this.toggleClarification();                                // СКОРРЕКТИРОВАТЬ ВСЕ НЕОБХОДИМЫЕ this._ В ДОКУМЕНТЕ (на черточку)
@@ -179,7 +181,6 @@
     this._input.type = 'radio';
     this._input.name = i;                                             // изменить поведение, чтобы name внутри одного блока был одинаков
     this._label.insertBefore(this._input, this._label.firstChild);
-    this.uncheckSingle();
   };
   
   Single.prototype.uncheckSingle = function() {
@@ -206,6 +207,9 @@
     this._input = document.createElement('input');
     this._input.type = 'checkbox';
     this._label.insertBefore(this._input, this._label.firstChild);
+  };
+  
+  Multiple.prototype.uncheckSingle = function() {
   };
   
   
@@ -238,11 +242,12 @@
     for (var i = 0; i < this._options.length; i++) {
       var option = document.createElement('option');
       option.innerHTML = this._options[i].text;
+      option.i = i;                                       // save initial index
       this._availableBlock.appendChild(option);
     }
     
     this._rangingBlock.appendChild(this._availableBlock);
-  }
+  };
   
   Ranging.prototype._createSelectedBlock = function() {
     this._selectedBlock = document.createElement('select');
@@ -250,7 +255,7 @@
     this._selectedBlock.size = this._options.length;
     
     this._rangingBlock.appendChild(this._selectedBlock);
-  }
+  };
   
   Ranging.prototype._createButtons = function() {
     var buttonsBlock = document.createElement('div');
@@ -290,10 +295,17 @@
       for (var i = 0; i < self._selectedBlock.length; i++) {
         var option = self._selectedBlock.options[i];
         
+        // search for a convenient index so as to put an element
+        for (var j = 0; j < self._availableBlock.length; j++) {
+          if(self._availableBlock.options[j].i >= self._selectedBlock.options[i].i) {
+            break;
+          }
+        }
+        
         if(option.selected) {
-          self._availableBlock.appendChild(option)
+          self._availableBlock.insertBefore(option, self._availableBlock.options[j]);
         }
       }
-    }
-  }
+    };
+  };
   
