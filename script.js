@@ -127,18 +127,26 @@
       this._label = document.createElement('label');
       this._label.innerHTML = this._options[i].text;
       li.appendChild(this._label);
-      this._createCheck();
+      
+      var checkedElem = this._createCheck(i);
+      this._label.insertBefore(checkedElem, this._label.firstChild);
       
       if (!this._options[i].none) {
         this._notNone.push(this._input);
       } else {
         this.uncheckSingle();
+        var self = this;
+        this._input.onclick = function() {
+          self.disable();
+        };
       }
-      if (this._options[i].other) {                  
-        this.toggleClarification();
+      if (this._options[i].other) {     
+        this._label.appendChild(this.createClarification());
+        this._input.onclick = function() {
+          self.toggleClarification();
+        };
       }
       
-      this.disable(i);
     }
     return this._ul;
   };
@@ -155,27 +163,14 @@
   };
   
   Answer.prototype.toggleClarification = function() {
-    var clarification = this.createClarification();
-    this._label.appendChild(clarification);
-    
-    var self = this;
-    
-    this._input.onclick = function() {
-      self._clarification.hidden = !self._clarification.hidden;
-    };
+    this._clarification.hidden = !this._clarification.hidden;
   };
   
-  Answer.prototype.disable = function(i) {
-    var self = this;
-    
-    if(this._options[i].none) {
-      this._input.onclick = function() {
-        for (i = 0; i < self._notNone.length; i++) {
-          self._notNone[i].disabled = !self._notNone[i].disabled;
-        }
-        self._clarification.disabled = !self._clarification.disabled;
-      };
+  Answer.prototype.disable = function() {
+    for (i = 0; i < this._notNone.length; i++) {
+      this._notNone[i].disabled = !this._notNone[i].disabled;
     }
+    this._clarification.disabled = !this._clarification.disabled;
   };
   
   function Single(options) {
@@ -188,7 +183,8 @@
     this._input = document.createElement('input');
     this._input.type = 'radio';
     this._input.name = i;                                             // behaviour has to be changed (the same name inside each blocks)
-    this._label.insertBefore(this._input, this._label.firstChild);
+    
+    return this._input;
   };
   
   Single.prototype.uncheckSingle = function() {
@@ -214,7 +210,8 @@
   Multiple.prototype._createCheck = function() {
     this._input = document.createElement('input');
     this._input.type = 'checkbox';
-    this._label.insertBefore(this._input, this._label.firstChild);
+    
+    return this._input;
   };
   
   Multiple.prototype.uncheckSingle = function() { // to avoid redefinition
@@ -241,9 +238,14 @@
     
     var selectedBlock = this._createSelectedBlock();
     rangingBlock.appendChild(selectedBlock);
-  
-    this.selectOption();
-    this.returnOption();
+    
+    var self = this;
+    this._selectButton.onclick = function() {
+      self.selectOption();
+    };
+    this._returnButton.onclick = function() {
+      self.returnOption();
+    };
     
     return rangingBlock;
   };
@@ -289,37 +291,27 @@
   };
   
   Ranging.prototype.selectOption = function() {
-    var self = this;
-  
-    this._selectButton.onclick = function() {
-      for (var i = 0; i < self._availableBlock.length; i++) {
-        var option = self._availableBlock.options[i];
-        
-        if(option.selected) {
-          self._selectedBlock.appendChild(option);
-        }
+    for (var i = 0; i < this._availableBlock.length; i++) {
+      var option = this._availableBlock.options[i];
+      
+      if(option.selected) {
+        this._selectedBlock.appendChild(option);
       }
-    };
+    }
   };
   
   Ranging.prototype.returnOption = function() {
-    var self = this;
-    
-    this._returnButton.onclick = function() {
-      for (var i = 0; i < self._selectedBlock.length; i++) {
-        var option = self._selectedBlock.options[i];
-        
-        // search for a convenient index so as to put an element into a correct place
-        for (var j = 0; j < self._availableBlock.length; j++) {
-          if(self._availableBlock.options[j].i >= self._selectedBlock.options[i].i) {
-            break;
-          }
-        }
-        
-        if(option.selected) {
-          self._availableBlock.insertBefore(option, self._availableBlock.options[j]);
+    for (var i = 0; i < this._selectedBlock.length; i++) {
+      var option = this._selectedBlock.options[i];
+      // search for a convenient index so as to put an element into a correct place
+      for (var j = 0; j < this._availableBlock.length; j++) {
+        if(this._availableBlock.options[j].i >= this._selectedBlock.options[i].i) {
+          break;
         }
       }
-    };
+      if(option.selected) {
+        this._availableBlock.insertBefore(option, this._availableBlock.options[j]);
+      }
+    }
   };
   
