@@ -33,7 +33,7 @@
       switch (questions[i].type) {
         case "single":
           var single = new Single(questions[i].body);
-          elem = single.createElemList();
+          elem = single.createElemList(i);
           container.appendChild(elem);
           break;
         case "multiple":
@@ -118,7 +118,7 @@
     this._options = options;
   }
   
-  Answer.prototype.createElemList = function() {
+  Answer.prototype.createElemList = function(k) {
     this._ul = document.createElement('ul');
     this._notNone = [];
     for (var i = 0; i < this._options.length; i++) {
@@ -128,7 +128,7 @@
       this._label.innerHTML = this._options[i].text;
       li.appendChild(this._label);
       
-      var checkedElem = this._createCheck(this._options.length);
+      var checkedElem = this._createCheck(k);
       this._label.insertBefore(checkedElem, this._label.firstChild);
       
       if (!this._options[i].none) {
@@ -139,7 +139,7 @@
         this._input.onclick = function() {
           self.disable();
         };
-      }
+      } 
       if (this._options[i].other) {     
         this._label.appendChild(this.createClarification());
         this._input.onclick = function() {
@@ -182,7 +182,7 @@
   Single.prototype._createCheck = function(i) {
     this._input = document.createElement('input');
     this._input.type = 'radio';
-    this._input.name = i;                                             // behaviour has to be changed (the same name inside each blocks)
+    this._input.name = i;                           
     
     return this._input;
   };
