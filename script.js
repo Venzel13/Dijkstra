@@ -128,7 +128,7 @@
       this._label.innerHTML = this._options[i].text;
       li.appendChild(this._label);
       
-      var checkedElem = this._createCheck(i);
+      var checkedElem = this._createCheck();
       this._label.insertBefore(checkedElem, this._label.firstChild);
       
       if (!this._options[i].none) {
