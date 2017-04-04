@@ -231,21 +231,21 @@
   };
   
   Ranging.prototype.createRangingBlock = function() {
-    this._rangingBlock = document.createElement('div');
+    var rangingBlock = document.createElement('div');
     
     var availableBlock = this._createAvailableBlock();
-    this._rangingBlock.appendChild(availableBlock);
+    rangingBlock.appendChild(availableBlock);
     
     var buttonsBlock = this._createButtons();
-    this._rangingBlock.appendChild(buttonsBlock);
+    rangingBlock.appendChild(buttonsBlock);
     
     var selectedBlock = this._createSelectedBlock();
-    this._rangingBlock.appendChild(selectedBlock);
+    rangingBlock.appendChild(selectedBlock);
   
     this.selectOption();
     this.returnOption();
     
-    return this._rangingBlock;
+    return rangingBlock;
   };
   
   Ranging.prototype._createAvailableBlock = function() {
