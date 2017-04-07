@@ -1,3 +1,8 @@
+.title {
+  font-size:50px;
+}
+
+
  ul {
    list-style:none;
  }
@@ -12,16 +17,17 @@
  }
  
  .tip {
+
    position:absolute;
-   top:20px;
-   left:400px;
-   width: 300px;
-   height: 50px;
+   top:10px;
+   left:200px;
+   width: auto;
+   height: auto;
    border: 1px solid black;
    border-radius: 10px;
    background: lightgray;
    text-align: center;
-   padding-top: 20px;
+   padding: 10px;
  }
  
  .clarification {
@@ -29,7 +35,7 @@
  }
  
  .sberLogo {
-   width: 150px;
+   width: 250px;
    vertical-align: middle;
    cursor: pointer;
  }
@@ -39,9 +45,12 @@
  }
  
  .container {
+   width:500px;
+   padding-right:50px;
    position:relative;
    border: 1px solid #EBEAEA;
-   margin: 20px;
+   margin-left: 20%;
+     margin-top:20px;
    background-color: #F8F7F7;
  }
  
@@ -61,7 +70,7 @@
  
  p {
    display: inline-block;
-   margin-left: 100px;
+   margin-left: 50px;
    font-size: 28px;
  }
  
