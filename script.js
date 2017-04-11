@@ -17,6 +17,7 @@
     }
     xhr.onreadystatechange = loadQuestions;
   })();
+  
   var lastTip;
   
   function createQuestionnaire(questions) {
@@ -44,7 +45,7 @@
           Q = createVoluntary;
           break;
         case "ranging":
-          Q = Ranging;
+          Q = createRanging;
           break;
       }
       questionTitle.appendChild(Q(questions[i].body, i));
@@ -191,7 +192,7 @@
     return input;
   }
   
-  function Ranging(answers) {
+  function createRanging(answers) {
     answers = answers.sort(compare);
     
     function compare(a, b) {
