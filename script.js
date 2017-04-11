@@ -17,6 +17,7 @@
     }
     xhr.onreadystatechange = loadQuestions;
   })();
+  var lastTip;
   
   function createQuestionnaire(questions) {
     for (var i = 0; i < questions.length; i++) {
@@ -48,6 +49,11 @@
       }
       questionTitle.appendChild(Q(questions[i].body, i));
     }
+    document.body.addEventListener('click', function() {
+      if (lastTip) { 
+        lastTip.hidden = true;
+      }
+    });
   }
   
   function createQuestionTitle(headerText, questionText) {
@@ -78,14 +84,12 @@
     questionMark.addEventListener('click', showTip.bind(tip));
     function showTip(e) {
       e.stopPropagation();
+      if(lastTip) {
+        lastTip.hidden = true;
+      }
+      lastTip = this;
       this.hidden = false;
     }
-
-    document.body.addEventListener('click', hideTip.bind(tip));
-    function hideTip() {
-      this.hidden = true;
-    }
-    
     return {tip, questionMark};
   }
   
@@ -96,7 +100,6 @@
     clarification.disabled = !clarification.disabled;
   }
     
-
   function createClarification() {
     var clarification = document.createElement('input');
     clarification.hidden = true;
