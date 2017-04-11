@@ -20,217 +20,173 @@
   
   function createQuestionnaire(questions) {
     for (var i = 0; i < questions.length; i++) {
-      var questionTitle = QuestionTitle({headerText: questions[i].header, questionText: questions[i].question});
+      var questionTitle = createQuestionTitle(questions[i].header, questions[i].question);
       document.getElementById('questionnaire').appendChild(questionTitle);
 
       if (questions[i].tip) {
-        var toolTip = Tip(questions[i].tip);
+        var toolTip = createTip(questions[i].tip);
         var tip = toolTip.tip;
         var questionMark = toolTip.questionMark;
-        questionTitle.question.appendChild(questionMark);
+        questionTitle.appendChild(questionMark);
         questionTitle.appendChild(tip);
       }
       
+      var Q;
       switch (questions[i].type) {
         case "single":
-          var single = Single(questions[i].body, i);
-          questionTitle.appendChild(single);
+          Q = createSingle;
           break;
         case "multiple":
-          var multiple = Multiple(questions[i].body);
-          questionTitle.appendChild(multiple);
+          Q = createMultiple;
           break;
         case "voluntary":
-          var voluntary = Voluntary(questions[i].body);
-          questionTitle.appendChild(voluntary);
+          Q = createVoluntary;
           break;
         case "ranging":
-          var ranging = Ranging(questions[i].body);
-          questionTitle.appendChild(ranging);
+          Q = Ranging;
           break;
       }
+      questionTitle.appendChild(Q(questions[i].body, i));
     }
   }
   
-  function QuestionTitle(text) {
-    text.headerText;
-    text.questionText;
+  function createQuestionTitle(headerText, questionText) {
+    var questionBlock = document.createElement('div');
+    questionBlock.className = 'container';
+
+    var header = document.createElement('p');
+    header.innerHTML = headerText;
+    questionBlock.appendChild(header);
     
-    function createContainer() {
-      var container = document.createElement('div');
-      container.className = 'container';
-      return container;
-    }
-    var container = createContainer();
+    var question = document.createElement('div');
+    question.innerHTML = questionText;
+    questionBlock.appendChild(question);
     
-    function createHeader() {
-      var header = document.createElement('p');
-      header.innerHTML = text.headerText;
-      return header;
-    }
-    container.appendChild(createHeader());
-    
-    function createQuestion() {
-      var question = document.createElement('div');
-      question.innerHTML = text.questionText;
-      return question;
-    }
-    container.question = createQuestion();
-    container.appendChild(container.question);
-    
-    return container;
+    return questionBlock;
   }
   
-  
-  function Tip(text) {
-    function createTip() {
-      var tip = document.createElement('div');
-      tip.innerHTML = text;
-      tip.className = 'tip';
-      tip.hidden = true;
-      return tip;
-    }
-    var tip = createTip();
+  function createTip(text) {
+    var tip = document.createElement('div');
+    tip.innerHTML = text;
+    tip.className = 'tip';
+    tip.hidden = true;
     
+    var questionMark = document.createElement('span');
+    questionMark.innerHTML = '?';
+    questionMark.className = 'toggleTip';
+    
+    questionMark.addEventListener('click', showTip.bind(tip));
     function showTip(e) {
       e.stopPropagation();
       this.hidden = false;
     }
-    
+
+    document.body.addEventListener('click', hideTip.bind(tip));
     function hideTip() {
       this.hidden = true;
     }
     
-    function createQuestionMark() {
-      var questionMark = document.createElement('span');
-      questionMark.innerHTML = '?';
-      questionMark.className = 'toggleTip';
-      
-      questionMark.addEventListener('click', showTip.bind(tip));
-      document.body.addEventListener('click', hideTip.bind(tip));
-      return questionMark;
-    }
-    var questionMark = createQuestionMark();
-    
     return {tip, questionMark};
   }
-  
   
   function disable(answers, clarification)  {
     for (var i = 0; i < answers.length; i++) {
       answers[i].disabled = !answers[i].disabled;
     }
-    disableClarification(clarification);
+    clarification.disabled = !clarification.disabled;
   }
     
+
+  function createClarification() {
+    var clarification = document.createElement('input');
+    clarification.hidden = true;
     
-    // как то надо вынести 3 функции в отдельный модуль Clarification например, а потом вызывать снаружи Clarification.createCLarification Clarification.createCLarification = createCLarification
-      function createClarification() {
-        var clarification = document.createElement('input');
-        clarification.hidden = true;
-        return clarification;
+    return clarification;
+  }
+      
+  function createSingle(answers, name) {
+    var ul = document.createElement('ul');
+    var notNone = [];
+    var clarification;
+    
+    for (var i = 0; i < answers.length; i++) {
+      ul.appendChild(createSingleAnswers(i));
+    }
+    
+    function createSingleAnswers(i) {
+      var li = document.createElement('li');
+      var input = document.createElement('input');
+      input.type = 'radio';
+      input.name = name;
+      label = document.createElement('label');
+      label.innerHTML = answers[i].text;
+      li.appendChild(label);
+      label.insertBefore(input, label.firstChild);
+          
+      if(!answers[i].none) {
+        notNone.push(input);
+      } else {
+        input.onclick = function() {
+          disable(notNone, clarification);
+        }
       }
-      
-      function toggleClarification(clarification) {
-        clarification.hidden = !clarification.hidden;
-      }
-      
-      function disableClarification(clarification) {
-        clarification.disabled = !clarification.disabled;
-      }
-      
-  function Single(answers, name) {
-    function createSingleList() {
-      var ul = document.createElement('ul');
-      var notNone = [];
-      
-      for (var i = 0; i < answers.length; i++) {
-        var li = document.createElement('li');
-        ul.appendChild(li);
-        label = document.createElement('label');
-        label.innerHTML = answers[i].text;
-        li.appendChild(label);
-        var input = document.createElement('input');
-        input.type = 'radio';
-        input.name = name;                   
-        label.insertBefore(input, label.firstChild);
         
-        if(!answers[i].none) {
-          notNone.push(input);
-        } else {
-          uncheckSingle(input);
-          input.onclick = function() {
-            disable(notNone, clarification);
-          }
-        }
-        if(answers[i].other) {
-          var clarification = createClarification();
-          label.appendChild(clarification);
-          input.onclick = function() {
-            toggleClarification(clarification);
-          }
+      if(answers[i].other) {
+        clarification = createClarification();
+        label.appendChild(clarification);
+        input.onclick = function() {
+          clarification.hidden = !clarification.hidden;
         }
       }
-      return ul;
+      return li;
     }
-    
-    function uncheckSingle(uncheckedElem) {
-      uncheckedElem.addEventListener('mousedown', mousedown.bind(uncheckedElem));
-      uncheckedElem.addEventListener('click', click.bind(uncheckedElem));
-      
-      function mousedown() {
-        this.isChecked = this.checked;
-      }
-      function click() {
-        this.checked = !this.isChecked;
-      }
-    }
-    return createSingleList();
+    return ul;
   }
 
-  function Multiple(answers) {
-    function createMultipleList() {
-      var ul = document.createElement('ul');
-      var notNone = [];
+  function createMultiple(answers) {
+    var ul = document.createElement('ul');
+    var notNone = [];
+    var clarification;
+    
+    for (var i = 0; i < answers.length; i++) {
+      ul.appendChild(createMultipleAnswers(i));
+    }
+    
+    function createMultipleAnswers(i) {
+      var li = document.createElement('li');
+      var input = document.createElement('input');
+      input.type = 'checkbox';
+      var label = document.createElement('label');
+      label.innerHTML = answers[i].text;
+      li.appendChild(label);
+      label.insertBefore(input, label.firstChild);
       
-      for (var i = 0; i < answers.length; i++) {
-        var li = document.createElement('li');
-        ul.appendChild(li);
-        label = document.createElement('label');
-        label.innerHTML = answers[i].text;
-        li.appendChild(label);
-        var input = document.createElement('input');
-        input.type = 'checkbox';
-        label.insertBefore(input, label.firstChild);
-        
-        if(!answers[i].none) {
-          notNone.push(input);
-        } else {
-          input.onclick = function() {
-            disable(notNone, clarification);
-          }
-        }
-        if(answers[i].other) {
-          var clarification = createClarification();
-          label.appendChild(clarification);
-          input.onclick = function() {
-            toggleClarification(clarification);
-          }
+      if(!answers[i].none) {
+        notNone.push(input);
+      } else {
+        input.onclick = function() {
+          disable(notNone, clarification);
         }
       }
-      return ul;
+      
+      if(answers[i].other) {
+        clarification = createClarification();
+        label.appendChild(clarification);
+        input.onclick = function() {
+          clarification.hidden = !clarification.hidden;
+        }
+      }
+      return li;
     }
-    return createMultipleList();
+    return ul
   }
-  
-  
-  function Voluntary(answers) {
+    
+  function createVoluntary() {
     var input = document.createElement('input');
     input.className = 'voluntary';
     
     return input;
   }
-  
   
   function Ranging(answers) {
     answers = answers.sort(compare);
@@ -239,47 +195,47 @@
       return a.text.localeCompare(b.text);
     }
     
-    var selectButton;  // возможно ли избавиться от глобальной переменной?
-    var returnButton; // возможно ли избавиться от глобальной переменной?
+    var selectButton;
+    var returnButton;
+    var availableBlock;
+    var selectedBlock;
     
     function createRangingBlock() {
       var rangingBlock = document.createElement('div');
       
-      var availableBlock = createAvailableBlock();
+      availableBlock = createAvailableBlock();
       rangingBlock.appendChild(availableBlock);
       
       var buttonsBlock = createButtons();
       rangingBlock.appendChild(buttonsBlock);
       
-      var selectedBlock = createSelectedBlock();
+      selectedBlock = createSelectedBlock();
       rangingBlock.appendChild(selectedBlock);
       
       selectButton.onclick = function() {
-        selectOption(availableBlock, selectedBlock);
+        selectOption();
       };
       returnButton.onclick = function() {
-        returnOption(availableBlock, selectedBlock);
+        returnOption();
       };
       return rangingBlock;
     }
     
-    var rangingBlock = createRangingBlock();
-    
     function createAvailableBlock() {
-      var availableBlock = document.createElement('select');
+      availableBlock = document.createElement('select');
       availableBlock.className = 'availableBlock';
       availableBlock.size = answers.length;
       for (var i = 0; i < answers.length; i++) {
         var option = document.createElement('option');
         option.innerHTML = answers[i].text;
-        option.i = i;                                           // сменить i на name   save initial index
+        option.name = i;                  
         availableBlock.appendChild(option);
       }
       return availableBlock;
     }
     
     function createSelectedBlock() {
-      var selectedBlock = document.createElement('select');
+      selectedBlock = document.createElement('select');
       selectedBlock.className = 'selectedBlock';
       selectedBlock.size = answers.length;
       
@@ -303,7 +259,7 @@
       return buttonsBlock;
     }
     
-    function selectOption(availableBlock, selectedBlock) {
+    function selectOption() {
       for (var i = 0; i < availableBlock.length; i++) {
         var option = availableBlock.options[i];
         
@@ -313,13 +269,13 @@
       }
     }
     
-    function returnOption(availableBlock, selectedBlock) {
+    function returnOption() {
       for (var i = 0; i < selectedBlock.length; i++) {
         var option = selectedBlock.options[i];
         // search for a convenient index so as to put an element into a correct place
         for (var j = 0; j < availableBlock.length; j++) {
           
-          if (availableBlock.options[j].i >= selectedBlock.options[i].i) {
+          if (availableBlock.options[j].name >= selectedBlock.options[i].name) {
             break;
           }
         }
