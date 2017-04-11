@@ -232,7 +232,7 @@
       for (var i = 0; i < answers.length; i++) {
         var option = document.createElement('option');
         option.innerHTML = answers[i].text;
-        option.name = i;                  
+        option.name = i;
         availableBlock.appendChild(option);
       }
       return availableBlock;
