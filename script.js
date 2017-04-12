@@ -27,28 +27,25 @@
 
       if (questions[i].tip) {
         var toolTip = createTip(questions[i].tip);
-        var tip = toolTip.tip;
-        var questionMark = toolTip.questionMark;
-        questionTitle.appendChild(questionMark);
-        questionTitle.appendChild(tip);
+        questionTitle.appendChild(toolTip);
       }
       
-      var Q;
+      var answer;
       switch (questions[i].type) {
         case "single":
-          Q = createSingle;
+          answer = createSingle;
           break;
         case "multiple":
-          Q = createMultiple;
+          answer = createMultiple;
           break;
         case "voluntary":
-          Q = createVoluntary;
+          answer = createVoluntary;
           break;
         case "ranging":
-          Q = createRanging;
+          answer = createRanging;
           break;
       }
-      questionTitle.appendChild(Q(questions[i].body, i));
+      questionTitle.appendChild(answer(questions[i].body, i));
     }
     document.body.addEventListener('click', function() {
       if (lastTip) { 
@@ -91,7 +88,13 @@
       lastTip = this;
       this.hidden = false;
     }
-    return {tip, questionMark};
+    
+    var toolTip = document.createElement('div');
+    toolTip.className = 'toolTip';
+    toolTip.appendChild(questionMark);
+    toolTip.appendChild(tip);
+    
+    return toolTip;
   }
   
   function disable(answers, clarification)  {
@@ -153,10 +156,10 @@
     var clarification;
     
     for (var i = 0; i < answers.length; i++) {
-      ul.appendChild(createMultipleAnswers(i));
+      ul.appendChild(createMultipleAnswers());
     }
     
-    function createMultipleAnswers(i) {
+    function createMultipleAnswers() {
       var li = document.createElement('li');
       var input = document.createElement('input');
       input.type = 'checkbox';
@@ -268,7 +271,10 @@
         var option = availableBlock.options[i];
         
         if(option.selected) {
-          selectedBlock.appendChild(option);
+          var returnedOption = option.cloneNode(true);
+          returnedOption.name = option.name;
+          selectedBlock.appendChild(returnedOption);
+          option.hidden = true;
         }
       }
     }
@@ -276,16 +282,10 @@
     function returnOption() {
       for (var i = 0; i < selectedBlock.length; i++) {
         var option = selectedBlock.options[i];
-        // search for a convenient index so as to put an element into a correct place
-        for (var j = 0; j < availableBlock.length; j++) {
-          
-          if (availableBlock.options[j].name >= selectedBlock.options[i].name) {
-            break;
-          }
-        }
         
         if (option.selected) {
-          availableBlock.insertBefore(option, availableBlock.options[j]);
+          selectedBlock.removeChild(option);
+            availableBlock.options[option.name].hidden = false;
         }
       }
     }
