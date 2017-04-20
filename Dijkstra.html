@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <title>Dijkstra's algorithm</title>
+</head>
+
+<body>
+  
+  
+  <script>
+  // algorithm of searching for the shortest way to elements
+  var vertices = [{value:0, visited: false}, {value:Infinity, visited: false}, {value:Infinity, visited: false}, {value:Infinity, visited: false}, {value:Infinity, visited: false}, {value:Infinity, visited: false}];
+// массив с вершинами
+
+
+  var matrix = [ // матрица смежности с весами ребер
+    [0,        10,       14,       Infinity, Infinity, Infinity],
+    [Infinity, 0,        3,        Infinity, Infinity, Infinity],
+    [Infinity, 3,        0,        12,       17,       Infinity],
+    [Infinity, Infinity, Infinity, 0,        3,        9],
+    [Infinity, Infinity, 17,       Infinity, 0,        4],
+    [Infinity, Infinity, Infinity, 9,        Infinity, 0]
+  ];
+  
+  function findDijkstra(matrix) {
+    while(true) {   //--------------------------- оборачиваем все в бесконечный цикл
+      var allVisited = true;
+      for (var k = 0; k < vertices.length; k++) {
+        if(!vertices[k].visited) allVisited = false;
+      }
+      if (allVisited) break; // прерываем выполенение бесконечного цикла в случае, если все вершины посещены
+      
+      var vertice = 0;
+      for (var i = 1; i < vertices.length; i++) {
+        if (vertices[i].visited) continue; // если вершина помечена как посещенная- пропускаем
+        
+        if (vertices[i - 1].value < vertices[i].value) {
+          vertice = i;
+        }
+      }
+
+      for (var i = 0; i < matrix[vertice].length; i++) {
+        if(matrix[vertice][i] == Infinity || matrix[vertice][i] == 0) continue; // если ребра матрицы равны 0 или бесконечности- пропускаем
+        var newLength = vertices[vertice].value + matrix[vertice][i]; // новая длина = вес метки вершины + вес ребра
+            
+        if (newLength < vertices[i].value) { 
+          vertices[i].value = newLength;  // если новая длина короче- заменяем старое значение на новое
+        }
+        
+      }
+      vertices[vertice].visited = true; // после каждой итерации точка становтся помеченной, в следующей итерации она не участвует
+    }
+  }
+
+  findDijkstra(matrix);
+  console.log(vertices);
+
+  
+  </script>
+</body>
+
+</html>
