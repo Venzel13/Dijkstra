@@ -12,10 +12,10 @@
   <script>
   // algorithm of searching for the shortest way to elements
   var vertices = [{value:0, visited: false}, {value:Infinity, visited: false}, {value:Infinity, visited: false}, {value:Infinity, visited: false}, {value:Infinity, visited: false}, {value:Infinity, visited: false}];
-// массив с вершинами
+// array of vertices
 
 
-  var matrix = [ // матрица смежности с весами ребер
+  var matrix = [ // adjacency matrix
     [0,        10,       14,       Infinity, Infinity, Infinity],
     [Infinity, 0,        3,        Infinity, Infinity, Infinity],
     [Infinity, 3,        0,        12,       17,       Infinity],
@@ -25,16 +25,15 @@
   ];
   
   function findDijkstra(matrix) {
-    while(true) {   //--------------------------- оборачиваем все в бесконечный цикл
+    while(true) {   //--------------------------- wrap the code into an infinite circle
       var allVisited = true;
       for (var k = 0; k < vertices.length; k++) {
         if(!vertices[k].visited) allVisited = false;
       }
-      if (allVisited) break; // прерываем выполенение бесконечного цикла в случае, если все вершины посещены
-      
+      if (allVisited) break; // interrupt the infinite circle in case all vertices have been visited
       var vertice = 0;
       for (var i = 1; i < vertices.length; i++) {
-        if (vertices[i].visited) continue; // если вершина помечена как посещенная- пропускаем
+        if (vertices[i].visited) continue; // if vertice has been visited then skip it
         
         if (vertices[i - 1].value < vertices[i].value) {
           vertice = i;
@@ -42,15 +41,15 @@
       }
 
       for (var i = 0; i < matrix[vertice].length; i++) {
-        if(matrix[vertice][i] == Infinity || matrix[vertice][i] == 0) continue; // если ребра матрицы равны 0 или бесконечности- пропускаем
-        var newLength = vertices[vertice].value + matrix[vertice][i]; // новая длина = вес метки вершины + вес ребра
+        if(matrix[vertice][i] == Infinity || matrix[vertice][i] == 0) continue; // if edge of the graph equals to Infinity or 0, then skip
+        var newLength = vertices[vertice].value + matrix[vertice][i]; // newLength = vertices weight +  edge weight
             
         if (newLength < vertices[i].value) { 
-          vertices[i].value = newLength;  // если новая длина короче- заменяем старое значение на новое
+          vertices[i].value = newLength;  // if newLength shorter then initial(previous) value then substitute them
         }
         
       }
-      vertices[vertice].visited = true; // после каждой итерации точка становтся помеченной, в следующей итерации она не участвует
+      vertices[vertice].visited = true; // after an each iteration vertices marked as visited and omit from the next iteration;
     }
   }
 
