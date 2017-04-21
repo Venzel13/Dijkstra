@@ -7,13 +7,7 @@
 </head>
 
 <body>
-  
-  
   <script>
-  // algorithm of searching for the shortest way to elements
-  var vertices = [{value:0, visited: false}, {value:Infinity, visited: false}, {value:Infinity, visited: false}, {value:Infinity, visited: false}, {value:Infinity, visited: false}, {value:Infinity, visited: false}];
-// array of vertices
-
   var matrix = [ // adjacency matrix
     [0,        10,       14,       Infinity, Infinity, Infinity],
     [Infinity, 0,        3,        Infinity, Infinity, Infinity],
@@ -23,7 +17,11 @@
     [Infinity, Infinity, Infinity, 9,        Infinity, 0]
   ];
   
+  // algorithm of searching for the shortest way to elements
   function findDijkstra(matrix) {
+    // array of vertices
+    var vertices = [{value:0, visited: false}, {value:Infinity, visited: false}, {value:Infinity, visited: false}, {value:Infinity, visited: false}, {value:Infinity, visited: false}, {value:Infinity, visited: false}];
+    
     while(true) {   //--------------------------- wrap the code into an infinite circle
       var minElement = Infinity;
       var indexOfMin = undefined;
@@ -36,7 +34,6 @@
           minElement = vertices[i].value; // the min (unmarked) element from the current massive
         }
       }
-      
       if (indexOfMin == undefined) break;  // interrupt the infinite circle in case all vertices have been visited
 
       for (var i = 0; i < matrix[indexOfMin].length; i++) {
@@ -49,10 +46,17 @@
       }
       vertices[indexOfMin].visited = true; // after an each iteration vertices marked as visited and omit from the next iteration;
     }
+    
+    var result = [];
+    
+    for (var i = 0; i < vertices.length; i++) {
+      result.push(vertices[i].value);
+    }
+    alert(result)
   }
+  
   findDijkstra(matrix);
-  console.log(vertices);
-
+  
   </script>
 </body>
 
