@@ -14,7 +14,6 @@
   var vertices = [{value:0, visited: false}, {value:Infinity, visited: false}, {value:Infinity, visited: false}, {value:Infinity, visited: false}, {value:Infinity, visited: false}, {value:Infinity, visited: false}];
 // array of vertices
 
-
   var matrix = [ // adjacency matrix
     [0,        10,       14,       Infinity, Infinity, Infinity],
     [Infinity, 0,        3,        Infinity, Infinity, Infinity],
@@ -26,37 +25,34 @@
   
   function findDijkstra(matrix) {
     while(true) {   //--------------------------- wrap the code into an infinite circle
-      var allVisited = true;
-      for (var k = 0; k < vertices.length; k++) {
-        if(!vertices[k].visited) allVisited = false;
-      }
-      if (allVisited) break; // interrupt the infinite circle in case all vertices have been visited
-      var vertice = 0;
-      for (var i = 1; i < vertices.length; i++) {
-        if (vertices[i].visited) continue; // if vertice has been visited then skip it
+      var minElement = Infinity;
+      var indexOfMin = undefined;
+      
+      for (var i = 0; i < vertices.length; i++) {
+        if(vertices[i].visited) continue;  // if vertice has been visited then skip it
         
-        if (vertices[i - 1].value < vertices[i].value) {
-          vertice = i;
+        if(vertices[i].value < minElement) {
+          indexOfMin = i;
+          minElement = vertices[i].value;
         }
       }
+      
+      if (indexOfMin == undefined) break;  // interrupt the infinite circle in case all vertices have been visited
 
-      for (var i = 0; i < matrix[vertice].length; i++) {
-        if(matrix[vertice][i] == Infinity || matrix[vertice][i] == 0) continue; // if edge of the graph equals to Infinity or 0, then skip
-        var newLength = vertices[vertice].value + matrix[vertice][i]; // newLength = vertices weight +  edge weight
+      for (var i = 0; i < matrix[indexOfMin].length; i++) {
+        if(matrix[indexOfMin][i] == Infinity || matrix[indexOfMin][i] == 0) continue; // if the edge of the graph equals to Infinity or 0, then skip
+        var newLength = vertices[indexOfMin].value + matrix[indexOfMin][i]; // newLength = vertices weight +  edge weight
             
         if (newLength < vertices[i].value) { 
           vertices[i].value = newLength;  // if newLength shorter then initial(previous) value then substitute them
         }
-        
       }
-      vertices[vertice].visited = true; // after an each iteration vertices marked as visited and omit from the next iteration;
+      vertices[indexOfMin].visited = true; // after an each iteration vertices marked as visited and omit from the next iteration;
     }
   }
-
   findDijkstra(matrix);
   console.log(vertices);
 
-  
   </script>
 </body>
 
