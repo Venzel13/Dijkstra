@@ -19,7 +19,6 @@ var matrix = [ // adjacency matrix
       }
       vertices[start].value = 0;
     }
-    
     createVertices(0);
     
     while(true) {
