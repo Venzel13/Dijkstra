@@ -62,6 +62,7 @@
       }
       alert(result);
     }
+    
     showResult();
   }
   findDijkstra(matrix);
