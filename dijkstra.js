@@ -20,7 +20,7 @@ var matrix = [ // adjacency matrix
       }
       vertices[start].value = 0;
     }
-    createVertices();
+    
     
     function chooseMinVertice() {
       if(!vertices[i].visited) {
@@ -47,6 +47,8 @@ var matrix = [ // adjacency matrix
       }
       alert(result);
     }
+    
+    createVertices();
     
     while(true) {
       var minElement = Infinity;
