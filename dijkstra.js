@@ -10,7 +10,8 @@ var matrix = [ // adjacency matrix
   function findDijkstra(matrix) {
     var vertices = [];
     
-    function createVertices(start) { // add length
+    function createVertices(start) {
+      start = +prompt('Введите начальную вершину', 0);
       for (var i = 0; i < matrix.length; i++) {
         vertices.push({
           value: Infinity,
@@ -19,33 +20,24 @@ var matrix = [ // adjacency matrix
       }
       vertices[start].value = 0;
     }
-    createVertices(0);
+    createVertices();
     
-    while(true) {
-      var minElement = Infinity;
-      var indexOfMin = -1;
-      
-      for (var i = 0; i < vertices.length; i++) {
-        if(!vertices[i].visited) {  // only not visited vertices
+    function chooseMinVertice() {
+      if(!vertices[i].visited) {
         
-          if(vertices[i].value < minElement) {
-            minElement = vertices[i].value; // the min (unmarked) element from the current massive
-            indexOfMin = i;
-          }
+        if(vertices[i].value < minElement) {
+          minElement = vertices[i].value;
+          indexOfMin = i; 
         }
       }
-      if (indexOfMin == -1) break;  // interrupt the infinite circle in case all vertices have been visited
-
-      for (var i = 0; i < matrix[indexOfMin].length; i++) {
-        if(matrix[indexOfMin][i] !== Infinity || matrix[indexOfMin][i] !== 0) {
-          var newLength = vertices[indexOfMin].value + matrix[indexOfMin][i];
+    }
+    
+    function relableVertice() {
+      var newLength = vertices[indexOfMin].value + matrix[indexOfMin][i];
             
-          if (newLength < vertices[i].value) { 
-            vertices[i].value = newLength;
-          }
+        if (newLength < vertices[i].value) { 
+          vertices[i].value = newLength;
         }
-      }
-      vertices[indexOfMin].visited = true;
     }
     
     function showResult() {
@@ -56,6 +48,23 @@ var matrix = [ // adjacency matrix
       alert(result);
     }
     
+    while(true) {
+      var minElement = Infinity;
+      var indexOfMin = -1;
+      
+      for (var i = 0; i < vertices.length; i++) {
+        chooseMinVertice();
+      }
+      
+      if (indexOfMin == -1) break;  // interrupt the infinite circle in case all vertices have been visited
+
+      for (var i = 0; i < matrix[indexOfMin].length; i++) {
+        if(matrix[indexOfMin][i] !== Infinity || matrix[indexOfMin][i] !== 0) {
+          relableVertice();
+        }
+      }
+      vertices[indexOfMin].visited = true;
+    }
     showResult();
   }
   
