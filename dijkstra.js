@@ -22,7 +22,7 @@
       return vertices;
     }
     
-    var vertices = createVertices(2);
+    var vertices = createVertices(0);
     
     
     function chooseMinVertice(list) {
