@@ -7,9 +7,10 @@
     [Infinity, Infinity, Infinity, 9,        Infinity, 0]
   ];
   
+  var initialVertice = +prompt('Начальная вершина', 0);
+  
   function findDijkstra(matrix) {
-    
-    function createVertices(start) {
+    function createVertices(initialVertice) {
       var vertices = [];
       for (var i = 0; i < matrix.length; i++) {
         vertices.push({
@@ -17,48 +18,44 @@
           visited: false,
         });
       }
-      vertices[start].value = 0;
+      vertices[initialVertice].value = 0;
       
       return vertices;
     }
     
-    var vertices = createVertices(0);
+    var vertices = createVertices(initialVertice);
     
-    
-    function chooseMinVertice(list) {
+    function chooseMinVertice(vertices) {
       var minElement = Infinity;
       var indexOfMin = -1;
-          
-      for (var i = 0; i < list.length; i++) {
-        if(!list[i].visited) {
-          if(list[i].value < minElement) {
-            minElement = list[i].value;
+      for (var i = 0; i < vertices.length; i++) {
+        
+        if(!vertices[i].visited) {
+          if(vertices[i].value < minElement) {
+            minElement = vertices[i].value;
             indexOfMin = i; 
           }
         }
       }
       return indexOfMin;
     }
-       
-    while(true) {    
-      var indexOfMin = chooseMinVertice(vertices);
-      
-      if (indexOfMin == -1) break;
-  
-      function relableVertice(currentPos) {
-        for (var i = 0; i < matrix[currentPos].length; i++) {
-          var edge = matrix[currentPos][i];
-          var newLength = vertices[currentPos].value + edge;
+    
+    function relableVertice() {
+      for (var i = 0; i < matrix[indexOfMin].length; i++) {
+        var edgeValue = matrix[indexOfMin][i];
+        var newVerticeValue = vertices[indexOfMin].value + edgeValue;
               
-          if (newLength < vertices[i].value) {
-            vertices[i].value = newLength;
-          }
+        if (newVerticeValue < vertices[i].value) {
+          vertices[i].value = newVerticeValue;
         }
-        return currentPos;
       }
-      
-      indexOfMin = relableVertice(indexOfMin);
+    }
+    var indexOfMin = initialVertice;
+    
+    while(indexOfMin != -1) {
+      relableVertice();
       vertices[indexOfMin].visited = true;
+      indexOfMin = chooseMinVertice(vertices);
     }
 
     function showResult() {
@@ -71,5 +68,6 @@
     
     showResult();
   }
+  
   findDijkstra(matrix);
   
