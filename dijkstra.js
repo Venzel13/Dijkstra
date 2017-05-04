@@ -22,6 +22,19 @@
   
   findDijkstra(matrix);
   
+  function createVertices(initialVertice) {
+    var vertices = [];
+    for (var i = 0; i < matrix.length; i++) {
+      vertices.push({
+        value: Infinity,
+        visited: false,
+      });
+    }
+    vertices[initialVertice].value = 0;
+      
+    return vertices;
+  }
+  
   function relableVertice(vertices, indexOfMin) {
     for (var i = 0; i < matrix[indexOfMin].length; i++) {
       var edgeValue = matrix[indexOfMin][i];
@@ -46,19 +59,6 @@
       }
     }
     return indexOfMin;
-  }
-  
-  function createVertices(initialVertice) {
-    var vertices = [];
-    for (var i = 0; i < matrix.length; i++) {
-      vertices.push({
-        value: Infinity,
-        visited: false,
-      });
-    }
-    vertices[initialVertice].value = 0;
-      
-    return vertices;
   }
   
   function showResult(vertices) {
