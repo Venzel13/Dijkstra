@@ -7,8 +7,7 @@
     [Infinity, Infinity, Infinity, 9,        Infinity, 0]
   ];
   
-  function findDijkstra(matrix) {
-    initialVertice = +prompt('Enter an initial vertice', 0);
+  function findDijkstra(matrix, initialVertice) {
     var vertices = createVertices(initialVertice);
     var indexOfMin = initialVertice;
     
@@ -20,7 +19,8 @@
     showResult(vertices);
   }
   
-  findDijkstra(matrix);
+  var initialVertice = +prompt('Enter an initial vertice', 0);
+  findDijkstra(matrix, initialVertice);
   
   function createVertices(initialVertice) {
     var vertices = [];
