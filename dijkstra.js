@@ -24,19 +24,19 @@
   
   function createVertices(initialVertice) {
     var vertices = [];
-    for (var i = 0; i < matrix.length; i++) {
+    for (var i = 0; i < matrix.length; i++) { //зависимость от наружной матрицы нужно убрать, какой смысл тогда передавать ее как параметр в функцию findDijkstra?
       vertices.push({
         value: Infinity,
         visited: false,
       });
     }
-    vertices[initialVertice].value = 0;
+    vertices[initialVertice].value = 0; //логически, это не относится к созданию вершин, это уже шаг самого алгоритма поиска
       
     return vertices;
   }
   
   function relableVertice(vertices, indexOfMin) {
-    for (var i = 0; i < matrix[indexOfMin].length; i++) {
+    for (var i = 0; i < matrix[indexOfMin].length; i++) { //matrix[indexOfMin] придумай этой штуке имя:) и убери зависимость от внешней матрицы
       var edgeValue = matrix[indexOfMin][i];
       var newVerticeValue = vertices[indexOfMin].value + edgeValue;
               
@@ -51,7 +51,7 @@
     var indexOfMin = -1;
     for (var i = 0; i < vertices.length; i++) {
         
-      if(!vertices[i].visited) {
+      if(!vertices[i].visited) { //зачем двойной if?
         if(vertices[i].value < minElement) {
           minElement = vertices[i].value;
           indexOfMin = i; 
@@ -61,7 +61,7 @@
     return indexOfMin;
   }
   
-  function showResult(vertices) {
+  function showResult(vertices) { //по сути ввод данных и показ результата не относятся к самому алгоритму поиска. Вынеси их отдельно.
     var result = [];
     for (var i = 0; i < vertices.length; i++) {
       result.push(vertices[i].value);
