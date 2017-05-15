@@ -8,21 +8,24 @@
   ];
   var vertices;
   var initialVertice = +prompt('Enter an initial vertice', 0);
-  findDijkstra(matrix, initialVertice);
+  findDijkstra({matrix, initialVertice});
   showResult(vertices);
   
-  function findDijkstra(matrix, initialVertice) {
-    vertices = createVertices(initialVertice, matrix);
+  function findDijkstra(options) {
+    var matrix = options.matrix;
+    var initialVertice = options.initialVertice;
+    
+    vertices = createVertices(matrix);
     var indexOfMin = initialVertice;
     
     while(indexOfMin != -1) {
-      relableVertice(vertices, indexOfMin, matrix, initialVertice);
+      relableVertice({vertices, indexOfMin, matrix, initialVertice});
       vertices[indexOfMin].visited = true;
       indexOfMin = chooseMinVertice(vertices);
     }
   }
   
-  function createVertices(initialVertice, matrix) {
+  function createVertices(matrix) {
     var vertices = [];
     for (var i = 0; i < matrix.length; i++) {
       vertices.push({
@@ -33,7 +36,12 @@
     return vertices;
   }
   
-  function relableVertice(vertices, indexOfMin, matrix, initialVertice) {
+  function relableVertice(options) {
+    var vertices = options.vertices;
+    var indexOfMin = options.indexOfMin;
+    var matrix = options.matrix;
+    var initialVertice = options.initialVertice;
+    
     vertices[initialVertice].value = 0;
     var minVerticeEdges = matrix[indexOfMin];
     
