@@ -78,7 +78,7 @@
   }
 
   function animateGraph() {
-    var sys = arbor.ParticleSystem(1000, 400,1);
+    var sys = arbor.ParticleSystem(1000, 40,1);
     sys.parameters({gravity:true});
     sys.renderer = Renderer("#viewport");
 
@@ -89,7 +89,7 @@
     for (var i = 0; i < matrix.length; i++) {
       for (var j = 0; j < matrix.length; j++) {
         if (matrix[i][j] != Infinity) {
-          sys.addEdge(i, j, {directed: true})
+          sys.addEdge(i, j, {'directed': true, 'length':matrix[i][j]})
         }
       }
     }
