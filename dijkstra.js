@@ -1,4 +1,4 @@
- var matrix = [ // adjacency matrix
+  var matrix = [ // adjacency matrix
     [0,        10,       14,       Infinity, Infinity, Infinity],
     [Infinity, 0,        3,        Infinity, Infinity, Infinity],
     [Infinity, 3,        0,        12,       17,       Infinity],
@@ -10,6 +10,7 @@
   var initialVertice = +prompt('Enter an initial vertice', 0);
   findDijkstra({matrix, initialVertice});
   showResult(vertices);
+  animateGraph();
   
   function findDijkstra(options) {
     var matrix = options.matrix;
@@ -74,4 +75,22 @@
       result.push(vertices[i].value);
     }
     alert(result);
+  }
+
+  function animateGraph() {
+    var sys = arbor.ParticleSystem(1000, 400,1);
+    sys.parameters({gravity:true});
+    sys.renderer = Renderer("#viewport");
+
+    for (var i = 0; i < vertices.length; i++) {
+      sys.addNode(i, {'color':'red','shape':'dot','label': 'n:' + i + ' w:' + vertices[i].value});
+    }
+
+    for (var i = 0; i < matrix.length; i++) {
+      for (var j = 0; j < matrix.length; j++) {
+        if (matrix[i][j] != Infinity) {
+          sys.addEdge(i, j, {directed: true})
+        }
+      }
+    }
   }
